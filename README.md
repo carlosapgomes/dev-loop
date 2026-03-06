@@ -10,6 +10,7 @@ Kit de workflow para desenvolvimento assistido por IA com foco em:
 ## Documento principal
 
 - [`SOP.md`](SOP.md)
+- Tutorial de uso: [`docs/getting-started.md`](docs/getting-started.md)
 
 ## Apêndices
 

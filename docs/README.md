@@ -1,6 +1,7 @@
 # Documentação do DevLoop
 
 - `../SOP.md` — documento principal
+- `getting-started.md` — tutorial prático (novo projeto e projeto existente)
 - `inventory-skills.md` — inventário, sobreposição e decisões
 - `migration-map.md` — mapa de renomeação/migração
 - `script-backlog.md` — plano de scriptização de playbooks
