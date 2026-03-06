@@ -1,92 +1,89 @@
-# Skills Bundle Completo (asaa-gpt/skills)
+# Skills do DevLoop
 
-Este diretorio consolida todos os skills disponiveis nos pacotes comparados:
-
-- Fonte 1: `esaa-deepseek/skills` (com scripts Python executaveis)
-- Fonte 2: `esaa-k2.5/skills` (foco em SKILL.md/protocolo operacional)
+Este diretório foi reorganizado por função (e não por origem de modelo).
 
 ## Estrutura
 
 ```text
 skills/
-├── deepseek/
-│   ├── adr-generator/
-│   ├── agents-md-generator/
-│   ├── artifacts-consistency-checker/
-│   ├── changelog-updater/
-│   ├── classify-change-risk/
-│   ├── project-context-maintainer/
-│   ├── quality-gate-executor/
-│   ├── refactor-sprint-suggester/
-│   ├── release-evidence-pack-generator/
-│   └── setup-solopreneur-project/
-├── k2.5/
-│   ├── esaa-classify-risk/
-│   ├── esaa-django-insights/
-│   ├── esaa-generate-agents/
-│   ├── esaa-generate-context/
-│   ├── esaa-project-resurrection/
-│   ├── esaa-suggest-adr/
-│   └── esaa-validate-agents/
+├── core/         # skills executáveis (script + testes)
+├── playbooks/    # protocolos/guias (alguns com script auxiliar)
+├── domain/       # especializações por stack
+├── legacy/       # aliases e compatibilidade temporária
 └── install_all_skills.sh
 ```
 
-## Skills executaveis agora (scripts Python)
+## Core (canônicos)
 
-Use diretamente:
-
-1. `deepseek/setup-solopreneur-project/setup_project.py`
-2. `deepseek/agents-md-generator/generate_agents_md.py`
-3. `deepseek/project-context-maintainer/maintain_project_context.py`
-4. `deepseek/classify-change-risk/classify_risk.py`
-5. `deepseek/quality-gate-executor/quality_gate.py`
-6. `deepseek/adr-generator/adr_generator.py`
-7. `deepseek/artifacts-consistency-checker/check_consistency.py`
+- `setup-solopreneur-project`
+- `agents-md-generator`
+- `project-context-maintainer`
+- `classify-change-risk`
+- `quality-gate-executor`
+- `adr-generator`
+- `artifacts-consistency-checker`
 
 Exemplos:
 
 ```bash
-python3 asaa-gpt/skills/deepseek/setup-solopreneur-project/setup_project.py --project-root . --include-openspec
-python3 asaa-gpt/skills/deepseek/classify-change-risk/classify_risk.py "Implementar autenticacao SSO" --format markdown
-python3 asaa-gpt/skills/deepseek/quality-gate-executor/quality_gate.py --format markdown
-python3 asaa-gpt/skills/deepseek/artifacts-consistency-checker/check_consistency.py --root . --format markdown
+python3 skills/core/setup-solopreneur-project/setup_project.py --project-root . --include-openspec
+python3 skills/core/classify-change-risk/classify_risk.py "Implementar integração SSO" --format markdown
+python3 skills/core/quality-gate-executor/quality_gate.py --format markdown
 ```
 
-## Skills de protocolo (usaveis via SKILL.md)
+## Playbooks
 
-Os skills em `k2.5/` sao detalhados e usaveis como protocolo de trabalho, mesmo sem script pronto no pacote:
+- `changelog-updater` (já inclui `update_changelog.py`)
+- `release-evidence-pack-generator` (já inclui `generate_release_pack.py`)
+- `refactor-sprint-suggester` (já inclui `suggest_refactor_sprint.py`)
+- `project-resurrection`
+- `suggest-adr` (já inclui `suggest_adr.py`)
+- `validate-agents` (já inclui `validate_agents.py`)
 
-- `esaa-classify-risk`
-- `esaa-django-insights`
-- `esaa-generate-agents`
-- `esaa-generate-context`
-- `esaa-project-resurrection`
-- `esaa-suggest-adr`
-- `esaa-validate-agents`
-
-## Instalacao em lote (Pi.dev)
+Exemplos (playbooks com script):
 
 ```bash
-bash asaa-gpt/skills/install_all_skills.sh
+python3 skills/playbooks/validate-agents/validate_agents.py --project-root . --staged
+python3 skills/playbooks/changelog-updater/update_changelog.py --project-root . --dry-run
+python3 skills/playbooks/release-evidence-pack-generator/generate_release_pack.py --project-root . --version v1.0.0 --dry-run
+python3 skills/playbooks/suggest-adr/suggest_adr.py --project-root . --auto-create
+python3 skills/playbooks/refactor-sprint-suggester/suggest_refactor_sprint.py --project-root . --output docs/refactor-sprint-report.md
 ```
 
-Destino padrao:
-- `~/.pi/agent/skills`
+## Domain
 
-Destino customizado:
+- `django-insights` (já inclui `django_insights.py`)
+
+## Legacy
+
+Aliases e nomes antigos (`esaa-*`) para migração gradual.
+
+## Instalação
+
+Instala core + playbooks + domain:
 
 ```bash
-bash asaa-gpt/skills/install_all_skills.sh /caminho/customizado/skills
+bash skills/install_all_skills.sh
 ```
 
-## Validacao rapida
+Instala também aliases legacy:
 
 ```bash
-for t in asaa-gpt/skills/deepseek/*/tests/test_*.py; do python3 "$t"; done
+bash skills/install_all_skills.sh ~/.pi/agent/skills --include-legacy
 ```
 
-## Documentos de workflow e tutoriais
+## Validação rápida
 
-- `asaa-gpt/workflow-hibrido-completo-skills-tutoriais-v2.md`
-- `asaa-gpt/workflow-hibrido-recomendado-v1.md`
-- `asaa-gpt/workflow-hibrido-checklist-executavel-1-pagina.md`
+```bash
+for t in skills/core/*/tests/test_*.py; do python3 "$t"; done
+for t in skills/playbooks/*/tests/test_*.py; do [ -f "$t" ] && python3 "$t"; done
+for t in skills/domain/*/tests/test_*.py; do [ -f "$t" ] && python3 "$t"; done
+```
+
+## Convenção de CLI
+
+Scripts seguem padrão de flags/exit codes em `docs/cli-conventions.md`.
+
+## Próximo passo recomendado
+
+Executar inventário e decisões de sobreposição em `docs/inventory-skills.md`.

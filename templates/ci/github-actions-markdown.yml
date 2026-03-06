@@ -1,0 +1,20 @@
+name: Markdown Quality
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+
+jobs:
+  markdown:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Run markdown autofix + lint
+        run: ./scripts/markdown-format.sh
+
+      - name: Fail if formatting changed files
+        run: git diff --exit-code
