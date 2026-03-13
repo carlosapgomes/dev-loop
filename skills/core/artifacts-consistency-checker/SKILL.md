@@ -1,6 +1,6 @@
 ---
 name: artifacts-consistency-checker
-description: Verifica consistência entre artefatos do projeto: specs vs código, ADRs vs implementação, documentação vs realidade. Valida alinhamento para rastreabilidade completa.
+description: "Verifica consistência entre artefatos do projeto: specs vs código, ADRs vs implementação, documentação vs realidade. Valida alinhamento para rastreabilidade completa."
 ---
 
 # Skill: Artifacts Consistency Checker

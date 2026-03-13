@@ -1,6 +1,6 @@
 ---
 name: django-insights
-description: Diagnóstico de saúde para projetos Django: performance, segurança e arquitetura.
+description: "Diagnóstico de saúde para projetos Django: performance, segurança e arquitetura."
 ---
 
 # Skill: django-insights
