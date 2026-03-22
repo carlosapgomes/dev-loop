@@ -24,6 +24,7 @@ Aplique o modo mais formal (`FEATURE`/`HIGH`) quando houver:
 
 - QUICK sem `design.md`: apenas bugfix simples, localizado e reversivel.
 - Qualquer mudanca que nao seja bugfix simples: usar FEATURE com `design.md`.
+- Planejamento de implementacao: preferir slices verticais (end-to-end) e evitar slice horizontal por camada.
 - Mudanças estruturais/arriscadas: inclua ADR + plano de rollback + validação completa.
 - Entregas formais (cliente enterprise/governo/regulado): gere release evidence pack com rastreabilidade.
 

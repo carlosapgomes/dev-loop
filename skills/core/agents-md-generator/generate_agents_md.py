@@ -354,6 +354,7 @@ def infer_anti_patterns(framework: Optional[str], has_python: bool, has_node: bo
         "Nao criar classes/funcoes God object com responsabilidades demais.",
         "Nao deixar TODO/FIXME sem issue ou plano.",
         "Nao acoplar regras de negocio em camada de apresentacao.",
+        "Nao executar slices horizontais por camada sem valor end-to-end.",
     ]
     if framework == "Django":
         anti.append("Nao colocar regra de negocio extensa em views.py ou serializers.")
@@ -423,7 +424,8 @@ def render_agents_markdown(info: ProjectInfo) -> str:
         "- Ao tocar legado sem testes, adicionar ao menos um teste de caracterizacao.",
         "",
         SECTION_STOP,
-        "- Implementar uma task slice por vez.",
+        "- Implementar uma task slice vertical por vez (end-to-end).",
+        "- Nao quebrar o trabalho em slice horizontal por camada sem entrega de fluxo completo.",
         "- Antes de codar o change: design.md e obrigatorio, exceto QUICK de bugfix simples e reversivel.",
         "- Rodar comandos de validacao da secao 2.",
         "- Atualizar tasks/specs com o status do slice.",
@@ -441,6 +443,7 @@ def render_agents_markdown(info: ProjectInfo) -> str:
         "```text",
         "Read AGENTS.md and PROJECT_CONTEXT.md first.",
         "Implement ONLY the next incomplete slice from tasks/spec.",
+        "Use vertical slicing (end-to-end); avoid horizontal slicing by layer.",
         "If the active change is not a simple QUICK bugfix, require design.md before implementation.",
         "Run section 2 validation commands and update artifacts for the completed slice.",
         "Commit and push the current branch.",

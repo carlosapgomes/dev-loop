@@ -143,7 +143,8 @@ Crie `AGENTS.md` na raiz com este conteúdo mínimo:
 - Cobrir edge cases conhecidos
 
 ## 6. Stop Rule (CRUCIAL)
-- Implementar UMA task slice por vez
+- Implementar UMA task slice vertical (end-to-end) por vez
+- Nao fazer slice horizontal por camada sem entrega de fluxo completo
 - Exigir `design.md` para o change, exceto QUICK de bugfix simples
 - Rodar validacoes da secao 2
 - Atualizar `tasks.md` com [x]
@@ -167,6 +168,7 @@ Crie `AGENTS.md` na raiz com este conteúdo mínimo:
 ## 9. Prompt de Reentrada
 - Read AGENTS.md and PROJECT_CONTEXT.md first.
 - Implement ONLY the next incomplete slice from tasks/spec.
+- Use vertical slicing (end-to-end); avoid horizontal slicing by layer.
 - If the active change is not a simple QUICK bugfix, require design.md before implementation.
 - Run section 2 validation commands and update artifacts for the completed slice.
 - Commit and push the current branch.
@@ -278,7 +280,7 @@ Este projeto segue o SOP do DevLoop para desenvolvimento assistido por IA com ra
 ### Como Contribuir
 1. Leia AGENTS.md antes de qualquer implementação
 2. Use OpenSpec para criar changes (`/opsx:propose`)
-3. Siga TDD e Stop Rule (uma slice por vez)
+3. Siga TDD e Stop Rule (uma slice vertical por vez)
 4. Crie ADRs para decisões arquiteturais
 
 ## Licença

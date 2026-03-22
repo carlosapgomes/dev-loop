@@ -57,6 +57,8 @@ class SetupProjectTests(unittest.TestCase):
             agents = (root / "AGENTS.md").read_text(encoding="utf-8")
             self.assertIn("## 2. Comandos de Validacao (Quality Gate)", agents)
             self.assertIn("## 3. Comandos Essenciais (Operacao Local)", agents)
+            self.assertIn("Implementar uma task slice vertical por vez (end-to-end).", agents)
+            self.assertIn("Nao quebrar o trabalho em slice horizontal por camada sem entrega de fluxo completo.", agents)
             self.assertIn(
                 "Antes de codar o change: design.md e obrigatorio, exceto QUICK de bugfix simples e reversivel.",
                 agents,

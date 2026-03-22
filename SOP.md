@@ -6,8 +6,8 @@ Este é o procedimento operacional padrão (SOP) do **DevLoop** (`dev-loop`).
 
 1. IA executa; artefatos em disco preservam contexto.
 2. Evidência no Git > intenção no chat.
-3. Um change por vez, dividido em slices pequenos.
-4. Um slice = um commit + push.
+3. Um change por vez, dividido em slices pequenos e verticais.
+4. Um slice vertical = um commit + push.
 5. Retomada deve ser possível com baixo tempo de aquecimento.
 
 ## Fluxo padrão por change
@@ -15,7 +15,7 @@ Este é o procedimento operacional padrão (SOP) do **DevLoop** (`dev-loop`).
 1. Classificar risco do change (`QUICK`, `FEATURE`, `HIGH/ARCH`).
 2. Criar change no OpenSpec.
 3. Gerar artefatos mínimos conforme risco.
-4. Implementar por slices (TDD + Stop Rule: validar -> commit -> push -> STOP).
+4. Implementar por slices verticais (TDD + Stop Rule: validar -> commit -> push -> STOP).
 5. Rodar quality gate do change.
 6. Arquivar change.
 7. Se necessário, gerar evidence pack de release.
@@ -49,12 +49,15 @@ Regra de decisao: em caso de duvida entre QUICK e FEATURE, use FEATURE com `desi
 
 Após cada slice:
 
-1. validar comandos de qualidade
-2. atualizar tasks/artefatos
-3. commitar com mensagem rastreavel
-4. dar push da branch
-5. parar e decidir conscientemente o próximo slice
-6. nao continuar sem confirmacao explicita
+1. confirmar que o slice e vertical (fluxo end-to-end com valor entregue)
+2. validar comandos de qualidade
+3. atualizar tasks/artefatos
+4. commitar com mensagem rastreavel
+5. dar push da branch
+6. parar e decidir conscientemente o próximo slice
+7. nao continuar sem confirmacao explicita
+
+Regra anti-pattern: nao fazer slice horizontal por camada (ex.: "so backend", "so frontend", "so banco") sem entregar fluxo vertical completo.
 
 ## Quality baseline
 
