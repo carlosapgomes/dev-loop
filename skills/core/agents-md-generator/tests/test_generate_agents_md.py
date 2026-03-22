@@ -28,6 +28,8 @@ class GenerateAgentsMdTests(unittest.TestCase):
             self.assertIn("## 2. Comandos de Validacao", content)
             self.assertIn("python3 manage.py check", content)
             self.assertIn("python3 -m pytest -q", content)
+            self.assertIn("TDD obrigatorio: RED (teste falha) -> GREEN (minimo para passar) -> REFACTOR (limpeza sem quebrar).", content)
+            self.assertIn("Follow TDD cycle: RED (failing test) -> GREEN (minimal pass) -> REFACTOR (clean safely).", content)
             self.assertIn("Implementar uma task slice vertical por vez (end-to-end).", content)
             self.assertIn("Nao quebrar o trabalho em slice horizontal por camada sem entrega de fluxo completo.", content)
             self.assertIn("design.md e obrigatorio, exceto QUICK de bugfix simples e reversivel.", content)

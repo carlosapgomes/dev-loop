@@ -199,7 +199,8 @@ Regras para escrita de testes:
 
 ```markdown
 ## 4. Política de Testes
-- TDD obrigatório para novas funcionalidades
+- TDD obrigatório com ciclo RED -> GREEN -> REFACTOR
+- Nao iniciar implementação sem teste falhando primeiro (RED)
 - Distribuição: 70% unit, 25% integration, 5% E2E
 - Nomeação: `test_<cenário>_<resultado_esperado>`
 - Isolamento: testes não devem depender de estado externo
@@ -215,6 +216,7 @@ Regra para evitar loops descontrolados:
 - Exija `design.md` para o change, exceto QUICK de bugfix simples
 - Implemente UMA task slice vertical (end-to-end) do `tasks.md` por vez
 - Nao faca slice horizontal por camada sem entrega de fluxo completo
+- Execute o ciclo RED -> GREEN -> REFACTOR dentro de cada slice
 - Após green (testes passam), faca commit e push
 - Atualize `tasks.md` marcando [x] na task concluída
 - **PARE e peça confirmação explícita para próxima task**

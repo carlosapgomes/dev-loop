@@ -64,6 +64,7 @@ python3 "$DEVLOOP_HOME/skills/core/setup-solopreneur-project/setup_project.py" \
 2. Criar artefatos OpenSpec conforme risco.
    QUICK sem `design.md` so para bugfix simples; nos demais casos, incluir `design.md`.
 3. Implementar 1 slice vertical por vez (end-to-end, sem slicing horizontal por camada).
+   Em cada slice, seguir TDD: RED -> GREEN -> REFACTOR.
 4. Ao fechar cada slice: validar, atualizar artefatos, commitar e dar push.
 5. Parar e so continuar com confirmacao explicita.
 
@@ -123,7 +124,7 @@ Adote o DevLoop em um change de baixo risco primeiro. Depois expanda para todo o
 | Antes de abrir change | `python3 .pi/skills/classify-change-risk/classify_risk.py "<descrição>" --format markdown` | Definir risco e nível de rigor |
 | Antes de implementar | validar artefatos do change (`proposal.md`, `tasks.md`, `design.md` quando aplicável) | Evitar cair em QUICK indevido |
 | Ao preparar change FEATURE/HIGH | `python3 .pi/skills/suggest-adr/suggest_adr.py --project-root . --fail-on recommendation` | Sinalizar necessidade de ADR |
-| Durante cada slice | comandos de teste/lint do `AGENTS.md` em um fluxo vertical | Garantir qualidade incremental com entrega end-to-end |
+| Durante cada slice | comandos de teste/lint do `AGENTS.md` em um fluxo vertical + ciclo TDD RED->GREEN->REFACTOR | Garantir qualidade incremental com entrega end-to-end |
 | Antes de commit | `python3 .pi/skills/validate-agents/validate_agents.py --project-root . --staged --fail-on medium` | Evitar anti-patterns críticos |
 | Fechamento de slice | `git commit -m "<tipo>: <slice>"` + `git push origin <branch>` | Registrar evidencia remota e forcar pausa consciente |
 | Antes de archivar change | `python3 .pi/skills/changelog-updater/update_changelog.py --project-root . --dry-run --fail-on empty` | Verificar evidência de mudança |

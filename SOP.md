@@ -15,7 +15,7 @@ Este é o procedimento operacional padrão (SOP) do **DevLoop** (`dev-loop`).
 1. Classificar risco do change (`QUICK`, `FEATURE`, `HIGH/ARCH`).
 2. Criar change no OpenSpec.
 3. Gerar artefatos mínimos conforme risco.
-4. Implementar por slices verticais (TDD + Stop Rule: validar -> commit -> push -> STOP).
+4. Implementar por slices verticais (TDD Red/Green/Refactor + Stop Rule: validar -> commit -> push -> STOP).
 5. Rodar quality gate do change.
 6. Arquivar change.
 7. Se necessário, gerar evidence pack de release.
@@ -58,6 +58,15 @@ Após cada slice:
 7. nao continuar sem confirmacao explicita
 
 Regra anti-pattern: nao fazer slice horizontal por camada (ex.: "so backend", "so frontend", "so banco") sem entregar fluxo vertical completo.
+
+## TDD Red/Green/Refactor
+
+Para cada slice vertical:
+
+1. RED: escrever teste que falha e representa comportamento esperado/bug.
+2. GREEN: implementar o minimo para passar o teste.
+3. REFACTOR: limpar codigo mantendo toda suite verde.
+4. repetir o ciclo no proximo slice (sem pular direto para implementacao).
 
 ## Quality baseline
 

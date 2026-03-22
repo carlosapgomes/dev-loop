@@ -138,13 +138,15 @@ Crie `AGENTS.md` na raiz com este conteúdo mínimo:
 - Models focados em dados e invariantes
 
 ## 5. Politica de Testes
-- TDD obrigatorio para novas funcionalidades
+- TDD obrigatorio com ciclo RED -> GREEN -> REFACTOR
+- Nao iniciar implementacao sem teste falhando primeiro (RED)
 - 70% unit, 25% integration, 5% E2E
 - Cobrir edge cases conhecidos
 
 ## 6. Stop Rule (CRUCIAL)
 - Implementar UMA task slice vertical (end-to-end) por vez
 - Nao fazer slice horizontal por camada sem entrega de fluxo completo
+- Executar RED -> GREEN -> REFACTOR dentro de cada slice
 - Exigir `design.md` para o change, exceto QUICK de bugfix simples
 - Rodar validacoes da secao 2
 - Atualizar `tasks.md` com [x]
@@ -169,6 +171,7 @@ Crie `AGENTS.md` na raiz com este conteúdo mínimo:
 - Read AGENTS.md and PROJECT_CONTEXT.md first.
 - Implement ONLY the next incomplete slice from tasks/spec.
 - Use vertical slicing (end-to-end); avoid horizontal slicing by layer.
+- Follow TDD cycle: RED (failing test) -> GREEN (minimal pass) -> REFACTOR (clean safely).
 - If the active change is not a simple QUICK bugfix, require design.md before implementation.
 - Run section 2 validation commands and update artifacts for the completed slice.
 - Commit and push the current branch.

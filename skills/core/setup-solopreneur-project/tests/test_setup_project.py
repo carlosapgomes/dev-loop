@@ -57,6 +57,14 @@ class SetupProjectTests(unittest.TestCase):
             agents = (root / "AGENTS.md").read_text(encoding="utf-8")
             self.assertIn("## 2. Comandos de Validacao (Quality Gate)", agents)
             self.assertIn("## 3. Comandos Essenciais (Operacao Local)", agents)
+            self.assertIn(
+                "TDD obrigatorio: RED (teste falha) -> GREEN (minimo para passar) -> REFACTOR (limpeza sem quebrar).",
+                agents,
+            )
+            self.assertIn(
+                "Follow TDD cycle: RED (failing test) -> GREEN (minimal pass) -> REFACTOR (clean safely).",
+                agents,
+            )
             self.assertIn("Implementar uma task slice vertical por vez (end-to-end).", agents)
             self.assertIn("Nao quebrar o trabalho em slice horizontal por camada sem entrega de fluxo completo.", agents)
             self.assertIn(
