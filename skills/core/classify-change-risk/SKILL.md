@@ -83,9 +83,12 @@ Marque 1 ponto para cada critério que se aplica:
 
 ### Classificação
 
-- **0-1 ponto**: ESSENCIAL (QUICK) 🟢
+- **0-1 ponto + bugfix simples**: ESSENCIAL (QUICK) 🟢
 - **2-3 pontos**: PROFISSIONAL (FEATURE) 🟡
 - **4+ pontos**: CRÍTICO (HIGH/ARCH) 🔴
+
+Regra operacional: se nao for bugfix simples, nao use QUICK.
+Em caso de duvida, promova para FEATURE e exija `design.md`.
 
 ## Processo de análise manual
 
@@ -370,6 +373,12 @@ echo "Criando change com nível: $LEVEL"
 # Criar change no OpenSpec com nível apropriado
 # /opsx:propose --level $LEVEL "$DESCRIPTION"
 ```
+
+### Politica de artefatos (design.md)
+
+- `ESSENTIAL/QUICK`: sem `design.md` somente para bugfix simples, localizado e reversivel.
+- `PROFESSIONAL/FEATURE`: `design.md` obrigatorio.
+- `CRITICAL/HIGH/ARCH`: `design.md` + ADR obrigatorios.
 
 ### No proposal.md
 

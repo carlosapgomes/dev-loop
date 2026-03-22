@@ -65,6 +65,13 @@ python3 check_consistency.py --root . --run-commands --timeout 60
 - Specs referenciadas existem e estão atualizadas
 - ADRs mencionadas existem e têm status correto
 
+### 6. Artefatos do change ativo (OpenSpec)
+
+- Todo change ativo tem `proposal.md` e `tasks.md`
+- `design.md` e obrigatorio por padrao
+- Excecao de `design.md`: apenas `QUICK` de bugfix simples e reversivel
+- `QUICK` sem sinal claro de bugfix simples deve ser reclassificado para `FEATURE`/`HIGH`
+
 ## Processo de verificação
 
 ### 1. Verificar specs vs código (OpenSpec)

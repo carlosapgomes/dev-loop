@@ -391,6 +391,7 @@ def render_agents_markdown(info: ProjectInfo) -> str:
             "- [ ] Lint/type-check sem erros relevantes",
             "- [ ] Specs/docs atualizadas quando necessario",
             "- [ ] Commit com mensagem clara e rastreavel",
+            "- [ ] Push realizado para branch remota",
         ]
     )
     essential_sections: List[str] = []
@@ -423,8 +424,12 @@ def render_agents_markdown(info: ProjectInfo) -> str:
         "",
         SECTION_STOP,
         "- Implementar uma task slice por vez.",
+        "- Antes de codar o change: design.md e obrigatorio, exceto QUICK de bugfix simples e reversivel.",
         "- Rodar comandos de validacao da secao 2.",
-        "- Atualizar tasks/specs e parar para confirmacao do proximo slice.",
+        "- Atualizar tasks/specs com o status do slice.",
+        "- Fazer commit com mensagem rastreavel e dar push para branch remota.",
+        "- PARAR e pedir confirmacao explicita para o proximo slice.",
+        "- Nao iniciar o proximo slice sem confirmacao explicita do usuario.",
         "",
         SECTION_DOD,
         *dod_lines,
@@ -436,7 +441,10 @@ def render_agents_markdown(info: ProjectInfo) -> str:
         "```text",
         "Read AGENTS.md and PROJECT_CONTEXT.md first.",
         "Implement ONLY the next incomplete slice from tasks/spec.",
-        "Run section 2 validation commands, update artifacts, then STOP and ask confirmation.",
+        "If the active change is not a simple QUICK bugfix, require design.md before implementation.",
+        "Run section 2 validation commands and update artifacts for the completed slice.",
+        "Commit and push the current branch.",
+        "STOP and ask for explicit confirmation before starting the next slice.",
         "```",
         "",
         "<!-- generated-by: agents-md-generator -->",

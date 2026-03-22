@@ -10,6 +10,43 @@ SCRIPT = Path(__file__).resolve().parents[1] / "classify_risk.py"
 
 
 class ClassifyRiskTests(unittest.TestCase):
+    def test_non_bugfix_description_is_promoted_to_professional(self) -> None:
+        run = subprocess.run(
+            [
+                "python3",
+                str(SCRIPT),
+                "Adicionar campo opcional no formulario de cadastro",
+                "--format",
+                "json",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(run.returncode, 0, msg=run.stderr)
+        payload = json.loads(run.stdout)
+        self.assertEqual(payload["risk_assessment"]["level"], "PROFESSIONAL")
+        self.assertTrue(payload["artifact_policy"]["design_required"])
+        self.assertIn("promotion_reason", payload["risk_assessment"])
+
+    def test_simple_bugfix_keeps_essential_and_no_design_required(self) -> None:
+        run = subprocess.run(
+            [
+                "python3",
+                str(SCRIPT),
+                "Bug fix simples: corrigir typo no label do botao",
+                "--format",
+                "json",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(run.returncode, 0, msg=run.stderr)
+        payload = json.loads(run.stdout)
+        self.assertEqual(payload["risk_assessment"]["level"], "ESSENTIAL")
+        self.assertFalse(payload["artifact_policy"]["design_required"])
+
     def test_context_adjustment_uses_security_pattern(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

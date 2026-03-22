@@ -144,8 +144,10 @@ Crie `AGENTS.md` na raiz com este conteúdo mínimo:
 
 ## 6. Stop Rule (CRUCIAL)
 - Implementar UMA task slice por vez
+- Exigir `design.md` para o change, exceto QUICK de bugfix simples
 - Rodar validacoes da secao 2
 - Atualizar `tasks.md` com [x]
+- Fazer commit e push do slice concluido
 - **PARAR e pedir confirmacao para proxima task**
 
 ## 7. Definition of Done (DoD)
@@ -165,7 +167,10 @@ Crie `AGENTS.md` na raiz com este conteúdo mínimo:
 ## 9. Prompt de Reentrada
 - Read AGENTS.md and PROJECT_CONTEXT.md first.
 - Implement ONLY the next incomplete slice from tasks/spec.
-- Run section 2 validation commands, update artifacts, then STOP and ask confirmation.
+- If the active change is not a simple QUICK bugfix, require design.md before implementation.
+- Run section 2 validation commands and update artifacts for the completed slice.
+- Commit and push the current branch.
+- STOP and ask for explicit confirmation before starting the next slice.
 ```
 
 ### 4. Criar PROJECT_CONTEXT.md (template)

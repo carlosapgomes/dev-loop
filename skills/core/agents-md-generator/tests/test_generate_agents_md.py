@@ -28,6 +28,10 @@ class GenerateAgentsMdTests(unittest.TestCase):
             self.assertIn("## 2. Comandos de Validacao", content)
             self.assertIn("python3 manage.py check", content)
             self.assertIn("python3 -m pytest -q", content)
+            self.assertIn("design.md e obrigatorio, exceto QUICK de bugfix simples e reversivel.", content)
+            self.assertIn("Fazer commit com mensagem rastreavel e dar push para branch remota.", content)
+            self.assertIn("Nao iniciar o proximo slice sem confirmacao explicita do usuario.", content)
+            self.assertIn("Push realizado para branch remota", content)
 
     def test_includes_markdown_and_hook_commands_when_present(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

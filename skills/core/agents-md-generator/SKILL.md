@@ -212,8 +212,9 @@ Regra para evitar loops descontrolados:
 
 ```markdown
 ## 5. Stop Rule (CRUCIAL)
+- Exija `design.md` para o change, exceto QUICK de bugfix simples
 - Implemente UMA task slice do `tasks.md` por vez
-- Após green (testes passam), faça commit
+- Após green (testes passam), faca commit e push
 - Atualize `tasks.md` marcando [x] na task concluída
 - **PARE e peça confirmação explícita para próxima task**
 - Não continue sem confirmação do usuário

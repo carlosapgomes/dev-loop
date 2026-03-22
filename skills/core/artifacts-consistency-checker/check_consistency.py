@@ -79,6 +79,59 @@ STOPWORDS = {
     "spec",
 }
 
+SIMPLE_BUGFIX_HINTS = {
+    "bugfix",
+    "bug fix",
+    "hotfix",
+    "corrigir",
+    "correcao",
+    "correção",
+    "typo",
+    "spelling",
+    "ortografia",
+    "gramatica",
+    "gramática",
+    "ajuste pontual",
+    "ajuste de texto",
+    "label",
+    "texto",
+}
+
+STRUCTURAL_HINTS = {
+    "nova funcionalidade",
+    "new feature",
+    "feature",
+    "implementar",
+    "adicionar",
+    "integracao",
+    "integração",
+    "api",
+    "endpoint",
+    "migration",
+    "migracao",
+    "migração",
+    "schema",
+    "database",
+    "banco de dados",
+    "auth",
+    "autenticacao",
+    "autenticação",
+    "authorization",
+    "autorizacao",
+    "autorização",
+    "refactor",
+    "refatoracao",
+    "refatoração",
+    "arquitetura",
+    "architecture",
+    "performance",
+    "otimizacao",
+    "otimização",
+    "compliance",
+    "lgpd",
+    "gdpr",
+}
+
 
 @dataclass
 class Finding:
@@ -258,6 +311,40 @@ def command_available(command: str) -> bool:
     return Path(token).exists()
 
 
+def detect_declared_risk_level(text: str) -> Optional[str]:
+    lower = text.lower()
+    if re.search(r"\b(high/arch|critical|critico|crítico)\b", lower):
+        return "HIGH/ARCH"
+    if re.search(r"\b(feature|professional|profissional)\b", lower):
+        return "FEATURE"
+    if re.search(r"\b(quick|essential|essencial)\b", lower):
+        return "QUICK"
+    return None
+
+
+def is_simple_bugfix_proposal(text: str) -> bool:
+    lower = text.lower()
+    has_bugfix_signal = any(term in lower for term in SIMPLE_BUGFIX_HINTS)
+    has_structural_signal = any(term in lower for term in STRUCTURAL_HINTS)
+    return has_bugfix_signal and not has_structural_signal
+
+
+def design_required_for_change(proposal_text: str) -> Tuple[bool, Optional[str], bool]:
+    declared_level = detect_declared_risk_level(proposal_text)
+    simple_bugfix = is_simple_bugfix_proposal(proposal_text)
+
+    if declared_level in {"FEATURE", "HIGH/ARCH"}:
+        return True, declared_level, simple_bugfix
+
+    if declared_level == "QUICK":
+        # QUICK sem bugfix simples e anti-pattern: forca design.
+        return (not simple_bugfix), declared_level, simple_bugfix
+
+    # Sem declaracao explicita: regra default exige design,
+    # exceto bugfix simples.
+    return (not simple_bugfix), declared_level, simple_bugfix
+
+
 # -----------------------------------------------------------------------------
 # Checks
 # -----------------------------------------------------------------------------
@@ -288,6 +375,89 @@ def check_required_files(root: Path, rep: Reporter) -> None:
         else:
             rep.add("warning", category, f"Artefato recomendado ausente: {rel}")
             rep.bump(category, "recommended_missing")
+
+
+def check_active_change_artifacts(root: Path, rep: Reporter) -> None:
+    category = "change_artifacts"
+    active_root = root / "openspec" / "changes" / "active"
+    if not active_root.exists():
+        rep.bump(category, "active_dir_missing")
+        return
+
+    changes = sorted([path for path in active_root.iterdir() if path.is_dir()])
+    if not changes:
+        rep.bump(category, "no_active_changes")
+        return
+
+    for change_dir in changes:
+        change_rel = str(change_dir.relative_to(root))
+        proposal = change_dir / "proposal.md"
+        tasks = change_dir / "tasks.md"
+        design = change_dir / "design.md"
+
+        if not proposal.exists():
+            rep.add(
+                "error",
+                category,
+                f"Change ativo sem proposal.md: {change_dir.name}",
+                files=[change_rel],
+                suggestion="Criar proposal.md no change ativo.",
+            )
+            rep.bump(category, "missing_proposal")
+            continue
+        rep.bump(category, "proposal_present")
+
+        if not tasks.exists():
+            rep.add(
+                "error",
+                category,
+                f"Change ativo sem tasks.md: {change_dir.name}",
+                files=[change_rel],
+                suggestion="Criar tasks.md no change ativo.",
+            )
+            rep.bump(category, "missing_tasks")
+        else:
+            rep.bump(category, "tasks_present")
+
+        proposal_text = read_text(proposal)
+        design_required, declared_level, simple_bugfix = design_required_for_change(proposal_text)
+
+        if declared_level == "QUICK" and not simple_bugfix:
+            rep.add(
+                "error",
+                category,
+                (
+                    f"Change {change_dir.name} marcado como QUICK, mas nao parece bugfix simples. "
+                    "Reclassifique para FEATURE/HIGH ou adicione design.md."
+                ),
+                files=[str(proposal.relative_to(root))],
+                suggestion="Evitar QUICK por padrao; QUICK so para bugfix simples e reversivel.",
+            )
+            rep.bump(category, "invalid_quick")
+
+        if design_required and not design.exists():
+            if declared_level:
+                level_note = f"nivel declarado: {declared_level}"
+            else:
+                level_note = "nivel nao declarado"
+            rep.add(
+                "error",
+                category,
+                f"design.md obrigatorio ausente no change ativo: {change_dir.name}",
+                details=level_note,
+                files=[str(change_dir.relative_to(root))],
+                suggestion=(
+                    "Criar design.md antes de implementar. "
+                    "Excecao so para QUICK de bugfix simples."
+                ),
+            )
+            rep.bump(category, "missing_design_required")
+        elif design_required and design.exists():
+            rep.bump(category, "design_required_present")
+        elif (not design_required) and design.exists():
+            rep.bump(category, "design_optional_present")
+        else:
+            rep.bump(category, "design_optional_absent")
 
 
 def check_specs_vs_code(root: Path, rep: Reporter, max_specs: int = 25) -> None:
@@ -609,6 +779,7 @@ def render_markdown(result: CheckResult, root: Path) -> str:
 def run_checks(root: Path, run_commands: bool, timeout: int, max_specs: int, max_adrs: int) -> CheckResult:
     rep = Reporter()
     check_required_files(root, rep)
+    check_active_change_artifacts(root, rep)
     check_specs_vs_code(root, rep, max_specs=max_specs)
     check_adrs_vs_implementation(root, rep, max_adrs=max_adrs)
     check_agents(root, rep, run_commands=run_commands, timeout=timeout)

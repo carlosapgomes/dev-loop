@@ -187,6 +187,62 @@ THRESHOLDS = {
     "essential": 0.0
 }
 
+SIMPLE_BUGFIX_SIGNALS = [
+    "bugfix",
+    "bug fix",
+    "hotfix",
+    "fix",
+    "corrigir",
+    "correcao",
+    "correção",
+    "typo",
+    "spelling",
+    "gramatica",
+    "gramática",
+    "ortografia",
+    "ajuste pontual",
+    "ajuste de texto",
+    "texto",
+    "label",
+    "changelog",
+]
+
+STRUCTURAL_CHANGE_SIGNALS = [
+    "nova funcionalidade",
+    "new feature",
+    "feature",
+    "implementar",
+    "add ",
+    "adicionar",
+    "integracao",
+    "integração",
+    "api",
+    "endpoint",
+    "migration",
+    "migracao",
+    "migração",
+    "schema",
+    "database",
+    "banco de dados",
+    "auth",
+    "autenticacao",
+    "autenticação",
+    "authorization",
+    "autorizacao",
+    "autorização",
+    "refactor",
+    "refatoracao",
+    "refatoração",
+    "arquitetura",
+    "architecture",
+    "performance",
+    "otimizacao",
+    "otimização",
+    "compliance",
+    "lgpd",
+    "gdpr",
+]
+
 # ============================================================================
 # Funções principais
 # ============================================================================
@@ -293,7 +349,12 @@ def calculate_risk_score(analysis: Dict[str, Any], factors: Dict[str, str]) -> D
     }
 
 
-def get_recommendations(level: str, analysis: Dict[str, Any]) -> List[str]:
+def get_recommendations(
+    level: str,
+    analysis: Dict[str, Any],
+    simple_bugfix: bool,
+    promoted_from_essential: bool,
+) -> List[str]:
     """Gera recomendações baseadas no nível de risco."""
     recommendations = []
     
@@ -302,6 +363,7 @@ def get_recommendations(level: str, analysis: Dict[str, Any]) -> List[str]:
             "🔴 **Revisão obrigatória**: Requer revisão detalhada por pares (se disponível) ou auto-revisão estruturada",
             "🔴 **Testes extensivos**: Testes unitários, de integração e e2e obrigatórios",
             "🔴 **Plano de rollback**: Definir plano claro de reversão em caso de problemas",
+            "🔴 **design.md obrigatório**: detalhar arquitetura, riscos e estratégia de rollout antes de codar",
             "🔴 **Documentação completa**: ADR obrigatório, atualizar AGENTS.md e PROJECT_CONTEXT.md",
             "🔴 **Validação extra**: Executar quality gate completo, análise de segurança",
             "🔴 **Comunicação**: Notificar stakeholders sobre mudanças críticas",
@@ -320,6 +382,7 @@ def get_recommendations(level: str, analysis: Dict[str, Any]) -> List[str]:
         recommendations.extend([
             "🟡 **Revisão recomendada**: Auto-revisão estruturada ou revisão rápida por pares",
             "🟡 **Testes adequados**: Testes unitários obrigatórios, considerar testes de integração",
+            "🟡 **design.md obrigatório**: usar proposal + specs + design + tasks antes de implementar",
             "🟡 **Documentação**: Atualizar documentação relevante (comentários, README se necessário)",
             "🟡 **Validação**: Executar quality gate básico antes do commit",
             "🟡 **Comunicação**: Notificar equipe sobre mudanças significativas",
@@ -337,9 +400,22 @@ def get_recommendations(level: str, analysis: Dict[str, Any]) -> List[str]:
             "🟢 **Testes básicos**: Testes unitários se aplicável, pelo menos smoke test",
             "🟢 **Documentação mínima**: Atualizar comentários/changelog se necessário",
             "🟢 **Validação**: Executar verificações rápidas antes do commit",
+            "🟢 **Sem design.md por exceção**: permitido apenas para bugfix simples e reversível",
             "🟢 **Deploy**: Pode ser feito em qualquer horário, com monitoramento básico",
             "🟢 **Comunicação**: Notificação opcional para a equipe",
         ])
+
+    if promoted_from_essential:
+        recommendations.insert(
+            0,
+            "🟡 **Promoção automática para FEATURE**: descrição não caracteriza bugfix simples; exige design.md.",
+        )
+
+    if level == "ESSENTIAL" and not simple_bugfix:
+        recommendations.insert(
+            0,
+            "🟡 **Atenção**: QUICK sem bugfix simples é anti-pattern; reclassifique para FEATURE com design.md.",
+        )
     
     # Recomendações gerais
     recommendations.extend([
@@ -411,6 +487,56 @@ def adjust_for_project_context(
     return score_result
 
 
+def _contains_any(text: str, terms: List[str]) -> bool:
+    lower = text.lower()
+    return any(term in lower for term in terms)
+
+
+def is_simple_bugfix_change(description: str, analysis: Dict[str, Any]) -> bool:
+    """ESSENTIAL so e permitido para bugfix simples e reversivel."""
+    lower = description.lower()
+    has_bugfix_signal = _contains_any(lower, SIMPLE_BUGFIX_SIGNALS)
+    has_structural_signal = _contains_any(lower, STRUCTURAL_CHANGE_SIGNALS)
+
+    patterns = analysis.get("patterns", {})
+    has_critical_patterns = any(
+        patterns.get(key, False)
+        for key in [
+            "has_security_terms",
+            "has_data_terms",
+            "has_financial_terms",
+            "has_infrastructure_terms",
+        ]
+    )
+
+    return has_bugfix_signal and not has_structural_signal and not has_critical_patterns
+
+
+def build_artifact_policy(level: str, simple_bugfix: bool) -> Dict[str, Any]:
+    """Define artefatos minimos esperados para o change."""
+    if level == "CRITICAL":
+        return {
+            "mode": "HIGH/ARCH",
+            "required": ["proposal.md", "tasks.md", "delta specs", "design.md", "ADR", "rollback plan"],
+            "design_required": True,
+            "reason": "Change critico/arquitetural exige design detalhado.",
+        }
+    if level == "PROFESSIONAL":
+        return {
+            "mode": "FEATURE",
+            "required": ["proposal.md", "tasks.md", "delta specs", "design.md"],
+            "design_required": True,
+            "reason": "Change estrutural/funcional exige design.md antes da implementacao.",
+        }
+    return {
+        "mode": "QUICK",
+        "required": ["proposal.md", "tasks.md"],
+        "design_required": False,
+        "reason": "Excecao valida apenas para bugfix simples, localizado e reversivel.",
+        "simple_bugfix_exception": simple_bugfix,
+    }
+
+
 def classify_change(description: str, factors: Optional[Dict[str, str]] = None) -> Dict[str, Any]:
     """Classifica uma mudança baseado na descrição."""
     if factors is None:
@@ -427,9 +553,32 @@ def classify_change(description: str, factors: Optional[Dict[str, str]] = None) 
     
     # Ajustar para contexto
     score_result = adjust_for_project_context(score_result, context, analysis)
-    
+
+    simple_bugfix = is_simple_bugfix_change(description, analysis)
+    promoted_from_essential = False
+
+    # Guardrail: ESSENTIAL (QUICK) so para bugfix simples.
+    if score_result["level"] == "ESSENTIAL" and not simple_bugfix:
+        score_result["level"] = "PROFESSIONAL"
+        score_result["color"] = "🟡"
+        score_result["score"] = max(score_result["score"], THRESHOLDS["professional"])
+        score_result["weighted_score"] = max(score_result.get("weighted_score", 0.0), THRESHOLDS["professional"])
+        score_result["confidence"] = max(score_result["confidence"], 30.0)
+        score_result["promotion_reason"] = (
+            "ESSENTIAL reservado para bugfix simples. "
+            "Mudancas sem sinal claro de bugfix devem usar FEATURE com design.md."
+        )
+        promoted_from_essential = True
+
+    artifact_policy = build_artifact_policy(score_result["level"], simple_bugfix=simple_bugfix)
+
     # Gerar recomendações
-    recommendations = get_recommendations(score_result["level"], analysis)
+    recommendations = get_recommendations(
+        score_result["level"],
+        analysis,
+        simple_bugfix=simple_bugfix,
+        promoted_from_essential=promoted_from_essential,
+    )
     
     # Resultado completo
     return {
@@ -440,6 +589,8 @@ def classify_change(description: str, factors: Optional[Dict[str, str]] = None) 
             "patterns": analysis["patterns"],
         },
         "risk_assessment": score_result,
+        "artifact_policy": artifact_policy,
+        "simple_bugfix_detected": simple_bugfix,
         "recommendations": recommendations,
         "context_used": context is not None,
         "project_context": context,
@@ -621,9 +772,18 @@ def generate_text_report(result: Dict[str, Any], verbose: bool = False) -> str:
     lines.append(f"Descrição: {result['description_preview']}")
     lines.append("")
     
+    policy = result.get("artifact_policy", {})
+
     # Resultado principal
     lines.append(f"{ra['color']} NÍVEL: {ra['level']}")
     lines.append(f"📊 Score: {ra['score']} (confiança: {ra['confidence']}%)")
+    if ra.get("promotion_reason"):
+        lines.append(f"⚖️  Guardrail aplicado: {ra['promotion_reason']}")
+    if policy:
+        design_flag = "obrigatorio" if policy.get("design_required") else "opcional (excecao)"
+        lines.append(f"📁 Artefatos: modo {policy.get('mode', 'N/A')} | design.md {design_flag}")
+        if policy.get("reason"):
+            lines.append(f"   motivo: {policy['reason']}")
     lines.append("")
     
     # Fatores (se verbose)
@@ -687,11 +847,20 @@ def generate_markdown_report(result: Dict[str, Any], verbose: bool = False) -> s
     lines.append(f"**Descrição:** {result['description_preview']}")
     lines.append("")
     
+    policy = result.get("artifact_policy", {})
+
     lines.append(f"## 📊 Resultado")
     lines.append("")
     lines.append(f"- **Nível:** {ra['color']} {ra['level']}")
     lines.append(f"- **Score:** {ra['score']}")
     lines.append(f"- **Confiança:** {ra['confidence']}%")
+    if ra.get("promotion_reason"):
+        lines.append(f"- **Guardrail aplicado:** {ra['promotion_reason']}")
+    if policy:
+        lines.append(f"- **Modo OpenSpec sugerido:** `{policy.get('mode', 'N/A')}`")
+        lines.append(f"- **design.md:** {'obrigatório' if policy.get('design_required') else 'opcional (exceção)'}")
+        if policy.get("reason"):
+            lines.append(f"- **Motivo:** {policy['reason']}")
     lines.append("")
     
     if verbose:
@@ -747,19 +916,19 @@ def generate_markdown_report(result: Dict[str, Any], verbose: bool = False) -> s
     
     if ra["level"] == "CRITICAL":
         lines.append("1. **Criar ADR** para documentar decisão")
-        lines.append("2. **Revisão detalhada** antes de implementar")
-        lines.append("3. **Plano de rollback** definido")
-        lines.append("4. **Testes extensivos** obrigatórios")
-        lines.append("5. **Deploy em horário de baixo impacto**")
+        lines.append("2. **Escrever design.md** antes de implementar")
+        lines.append("3. **Revisão detalhada** antes de implementar")
+        lines.append("4. **Plano de rollback** definido")
+        lines.append("5. **Testes extensivos** obrigatórios")
     elif ra["level"] == "PROFESSIONAL":
-        lines.append("1. **Auto-revisão estruturada**")
-        lines.append("2. **Testes unitários** obrigatórios")
-        lines.append("3. **Atualizar documentação** relevante")
+        lines.append("1. **Escrever design.md** (obrigatório para FEATURE)")
+        lines.append("2. **Auto-revisão estruturada**")
+        lines.append("3. **Testes unitários** obrigatórios")
         lines.append("4. **Quality gate** antes do commit")
     else:
         lines.append("1. **Revisão rápida** se possível")
-        lines.append("2. **Testes básicos** recomendados")
-        lines.append("3. **Commit com verificação**")
+        lines.append("2. **Sem design.md apenas se bugfix simples**")
+        lines.append("3. **Testes básicos** recomendados")
     
     lines.append("")
     lines.append("---")

@@ -22,10 +22,11 @@ Aplique o modo mais formal (`FEATURE`/`HIGH`) quando houver:
 
 ## Recomendação prática
 
-- Mudanças simples e reversíveis: mantenha enxuto.
+- QUICK sem `design.md`: apenas bugfix simples, localizado e reversivel.
+- Qualquer mudanca que nao seja bugfix simples: usar FEATURE com `design.md`.
 - Mudanças estruturais/arriscadas: inclua ADR + plano de rollback + validação completa.
 - Entregas formais (cliente enterprise/governo/regulado): gere release evidence pack com rastreabilidade.
 
 ## Regra de ouro
 
-Aumente o rigor quando ele reduzir risco real de retrabalho, regressão ou auditoria futura.
+Em caso de duvida, escolha o modo mais rigoroso (`FEATURE` com `design.md`).

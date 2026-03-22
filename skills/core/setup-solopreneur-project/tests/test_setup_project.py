@@ -57,6 +57,13 @@ class SetupProjectTests(unittest.TestCase):
             agents = (root / "AGENTS.md").read_text(encoding="utf-8")
             self.assertIn("## 2. Comandos de Validacao (Quality Gate)", agents)
             self.assertIn("## 3. Comandos Essenciais (Operacao Local)", agents)
+            self.assertIn(
+                "Antes de codar o change: design.md e obrigatorio, exceto QUICK de bugfix simples e reversivel.",
+                agents,
+            )
+            self.assertIn("Fazer commit com mensagem rastreavel e dar push para branch remota.", agents)
+            self.assertIn("Push realizado para branch remota", agents)
+            self.assertIn("Nao iniciar o proximo slice sem confirmacao explicita do usuario.", agents)
 
             check = subprocess.run(
                 ["python3", str(SCRIPT), "--project-root", str(root), "--check", "--format", "json"],
