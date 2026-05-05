@@ -67,10 +67,15 @@ class SetupProjectTests(unittest.TestCase):
             )
             self.assertIn("Implementar uma task slice vertical por vez (end-to-end).", agents)
             self.assertIn("Nao quebrar o trabalho em slice horizontal por camada sem entrega de fluxo completo.", agents)
+            self.assertIn("Planejar slices enxutos: tocar poucos arquivos (ideal <= 5) e so o necessario para entregar valor.", agents)
+            self.assertIn("Cada slice deve incluir handoff + prompt pronto para implementador LLM com contexto zero.", agents)
             self.assertIn(
                 "Antes de codar o change: design.md e obrigatorio, exceto QUICK de bugfix simples e reversivel.",
                 agents,
             )
+            self.assertIn("No REFACTOR, reforcar clean code: nomes claros, funcoes coesas, baixo acoplamento e remocao de codigo morto.", agents)
+            self.assertIn("Gerar relatorio detalhado do slice com snippets antes/depois e salvar em markdown temporario.", agents)
+            self.assertIn("REPORT_PATH informado para avaliacao do planner", agents)
             self.assertIn("Fazer commit com mensagem rastreavel e dar push para branch remota.", agents)
             self.assertIn("Push realizado para branch remota", agents)
             self.assertIn("Nao iniciar o proximo slice sem confirmacao explicita do usuario.", agents)

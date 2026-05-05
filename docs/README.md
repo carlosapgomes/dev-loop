@@ -8,3 +8,4 @@
 - `cli-conventions.md` — padrão de flags e códigos de saída dos scripts
 - `../scripts/README.md` — smoke tests e utilitários de validação
 - `appendices/rigor-by-complexity.md` — recomendações para aumentar rigor quando necessário
+- `../templates/slices/slice-handoff-template.md` — template de slice para LLM contexto zero

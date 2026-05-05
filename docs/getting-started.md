@@ -63,10 +63,10 @@ python3 "$DEVLOOP_HOME/skills/core/setup-solopreneur-project/setup_project.py" \
 1. Classificar risco do change.
 2. Criar artefatos OpenSpec conforme risco.
    QUICK sem `design.md` so para bugfix simples; nos demais casos, incluir `design.md`.
-3. Implementar 1 slice vertical por vez (end-to-end, sem slicing horizontal por camada).
-   Em cada slice, seguir TDD: RED -> GREEN -> REFACTOR.
-4. Ao fechar cada slice: validar, atualizar artefatos, commitar e dar push.
-5. Parar e so continuar com confirmacao explicita.
+3. Planejar 1 slice vertical por vez (end-to-end, sem slicing horizontal por camada), ja com handoff + prompt para LLM com contexto zero.
+4. Em cada slice, seguir TDD: RED -> GREEN -> REFACTOR com foco em clean code.
+5. Ao fechar cada slice: validar, atualizar artefatos, commitar, dar push e gerar relatorio detalhado (com snippets antes/depois) em markdown temporario.
+6. Informar `REPORT_PATH=<arquivo.md>` para avaliacao do planner e parar ate confirmacao explicita.
 
 ---
 
@@ -117,16 +117,29 @@ Adote o DevLoop em um change de baixo risco primeiro. Depois expanda para todo o
 
 ---
 
+## Template recomendado para cada slice
+
+Use o template em `templates/slices/slice-handoff-template.md` para planejar execucao por LLM com contexto zero.
+
+Minimo esperado por slice:
+- escopo enxuto (poucos arquivos, so o necessario)
+- handoff + prompt pronto de execucao
+- criterios de sucesso e gates de autoavaliacao
+- relatorio final com antes/depois em arquivo markdown temporario
+
+---
+
 ## O que rodar em cada momento
 
 | Momento | Comando sugerido | Objetivo |
 |---|---|---|
 | Antes de abrir change | `python3 .pi/skills/classify-change-risk/classify_risk.py "<descrição>" --format markdown` | Definir risco e nível de rigor |
-| Antes de implementar | validar artefatos do change (`proposal.md`, `tasks.md`, `design.md` quando aplicável) | Evitar cair em QUICK indevido |
+| Antes de implementar | validar artefatos do change (`proposal.md`, `tasks.md`, `design.md` quando aplicável) + preencher `templates/slices/slice-handoff-template.md` | Evitar QUICK indevido e preparar handoff para LLM contexto zero |
 | Ao preparar change FEATURE/HIGH | `python3 .pi/skills/suggest-adr/suggest_adr.py --project-root . --fail-on recommendation` | Sinalizar necessidade de ADR |
-| Durante cada slice | comandos de teste/lint do `AGENTS.md` em um fluxo vertical + ciclo TDD RED->GREEN->REFACTOR | Garantir qualidade incremental com entrega end-to-end |
+| Durante cada slice | comandos de teste/lint do `AGENTS.md` em um fluxo vertical + ciclo TDD RED->GREEN->REFACTOR | Garantir qualidade incremental com entrega end-to-end e clean code |
 | Antes de commit | `python3 .pi/skills/validate-agents/validate_agents.py --project-root . --staged --fail-on medium` | Evitar anti-patterns críticos |
-| Fechamento de slice | `git commit -m "<tipo>: <slice>"` + `git push origin <branch>` | Registrar evidencia remota e forcar pausa consciente |
+| Fechamento de slice | `git commit -m "<tipo>: <slice>"` + `git push origin <branch>` + gerar relatorio em `.tmp`/`/tmp` | Registrar evidencia remota e preparar avaliacao do planner |
+| Handoff para planner | imprimir `REPORT_PATH=<arquivo-temporario.md>` | Permitir revisao objetiva do slice implementado |
 | Antes de archivar change | `python3 .pi/skills/changelog-updater/update_changelog.py --project-root . --dry-run --fail-on empty` | Verificar evidência de mudança |
 | Pré-release | `python3 .pi/skills/release-evidence-pack-generator/generate_release_pack.py --project-root . --version vX.Y.Z --dry-run --fail-on missing-any` | Garantir pacote mínimo de evidências |
 | Rotina periódica (mensal) | `python3 .pi/skills/refactor-sprint-suggester/suggest_refactor_sprint.py --project-root . --fail-on high` | Mapear dívida técnica prioritária |

@@ -14,3 +14,7 @@ Este diretório contém templates reutilizáveis para bootstrap de projetos no D
 ## CI
 
 - `ci/github-actions-markdown.yml`
+
+## Slice Planning
+
+- `slices/slice-handoff-template.md` — template de handoff/prompt/criterios/gates para execucao por LLM com contexto zero

@@ -47,6 +47,8 @@ GITIGNORE_LINES = [
     "prompts/",
     ".env",
     "*.secret",
+    "tmp/",
+    ".tmp/",
     "openspec/changes/*/",
     "!openspec/changes/archive/",
 ]
@@ -111,14 +113,21 @@ def _agents_fallback() -> str:
         "## 5. Politica de Testes\n"
         "- TDD obrigatorio: RED (teste falha) -> GREEN (minimo para passar) -> REFACTOR (limpeza sem quebrar).\n"
         "- Nao iniciar implementacao sem primeiro teste falhando para o comportamento-alvo.\n"
+        "- No REFACTOR, reforcar clean code: nomes claros, funcoes coesas, baixo acoplamento e remocao de codigo morto.\n"
         "- Cobrir cenarios criticos e edge cases.\n\n"
         "## 6. Stop Rule (CRUCIAL)\n"
         "- Implementar um slice vertical por vez (end-to-end).\n"
         "- Nao quebrar o trabalho em slice horizontal por camada sem entrega de fluxo completo.\n"
+        "- Planejar slices enxutos: tocar poucos arquivos (ideal <= 5) e so o necessario.\n"
+        "- Se precisar ampliar escopo de arquivos, registrar justificativa em tasks/design antes de codar.\n"
+        "- Cada slice deve incluir handoff + prompt pronto para implementador LLM com contexto zero.\n"
+        "- O slice deve explicitar criterios de sucesso e gates de autoavaliacao antes da implementacao.\n"
         "- Exigir design.md para o change, exceto QUICK de bugfix simples e reversivel.\n"
         "- Rodar comandos da secao 2.\n"
         "- Atualizar tasks/specs com o status do slice.\n"
         "- Fazer commit com mensagem rastreavel e dar push para branch remota.\n"
+        "- Gerar relatorio detalhado do slice com snippets antes/depois e salvar em markdown temporario.\n"
+        "- Informar REPORT_PATH para avaliacao do planner.\n"
         "- PARAR e pedir confirmacao explicita para o proximo slice.\n"
         "- Nao iniciar o proximo slice sem confirmacao explicita do usuario.\n\n"
         "## 7. Definition of Done (DoD)\n"
@@ -128,7 +137,9 @@ def _agents_fallback() -> str:
         "- [ ] Lint/type-check OK\n"
         "- [ ] Tasks/specs/docs atualizadas\n"
         "- [ ] Commit com mensagem clara\n"
-        "- [ ] Push realizado para branch remota\n\n"
+        "- [ ] Push realizado para branch remota\n"
+        "- [ ] Relatorio do slice gerado em markdown temporario com snippets antes/depois\n"
+        "- [ ] REPORT_PATH informado para avaliacao do planner\n\n"
         "## 8. Anti-patterns Proibidos\n"
         "- Nao criar God classes/services.\n"
         "- Nao executar slices horizontais por camada sem valor end-to-end.\n"
@@ -138,9 +149,14 @@ def _agents_fallback() -> str:
         "Read AGENTS.md and PROJECT_CONTEXT.md first.\n"
         "Implement ONLY the next incomplete slice from tasks/spec.\n"
         "Use vertical slicing (end-to-end); avoid horizontal slicing by layer.\n"
+        "Keep the slice lean: touch only the minimum files needed (ideal <= 5).\n"
         "Follow TDD cycle: RED (failing test) -> GREEN (minimal pass) -> REFACTOR (clean safely).\n"
+        "In REFACTOR, enforce clean code (clarity, cohesion, low coupling, no dead code).\n"
         "If the active change is not a simple QUICK bugfix, require design.md before implementation.\n"
+        "Assume the implementer is an LLM with zero context: include handoff, prompt, success criteria and self-eval gates in the slice file.\n"
         "Run section 2 validation commands and update artifacts for the completed slice.\n"
+        "Create a detailed implementation report with before/after snippets in a temporary markdown file.\n"
+        "Reply with REPORT_PATH=<temp-markdown-path> for planner review.\n"
         "Commit and push the current branch.\n"
         "STOP and ask for explicit confirmation before starting the next slice.\n"
         "```\n"

@@ -59,6 +59,25 @@ Após cada slice:
 
 Regra anti-pattern: nao fazer slice horizontal por camada (ex.: "so backend", "so frontend", "so banco") sem entregar fluxo vertical completo.
 
+## Contrato de planejamento de slice (obrigatorio)
+
+Todo slice deve ser planejado para execucao por **LLM com contexto zero**.
+
+Checklist obrigatorio do slice:
+
+1. objetivo vertical claro (valor end-to-end)
+2. escopo enxuto: tocar poucos arquivos, apenas o necessario (se ampliar escopo, justificar)
+3. handoff funcional e de negocio no proprio arquivo do slice
+4. prompt pronto para implementacao (copiar/colar)
+5. criterios de sucesso objetivos
+6. gates de autoavaliacao (teste/lint/type-check/consistencia de artefatos)
+7. exigencia de clean code no REFACTOR (nomes claros, funcoes coesas, remocao de codigo morto, baixo acoplamento)
+8. relatorio detalhado de implementacao com snippets antes/depois
+9. salvar o relatorio em markdown temporario e informar o caminho para avaliacao do planner
+
+Formato de saida obrigatorio ao concluir slice:
+- `REPORT_PATH=<caminho-do-arquivo-temporario.md>`
+
 ## TDD Red/Green/Refactor
 
 Para cada slice vertical:

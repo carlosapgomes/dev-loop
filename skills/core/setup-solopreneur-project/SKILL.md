@@ -140,17 +140,22 @@ Crie `AGENTS.md` na raiz com este conteúdo mínimo:
 ## 5. Politica de Testes
 - TDD obrigatorio com ciclo RED -> GREEN -> REFACTOR
 - Nao iniciar implementacao sem teste falhando primeiro (RED)
+- No REFACTOR, reforcar clean code (nomes claros, coesao, baixo acoplamento, sem codigo morto)
 - 70% unit, 25% integration, 5% E2E
 - Cobrir edge cases conhecidos
 
 ## 6. Stop Rule (CRUCIAL)
 - Implementar UMA task slice vertical (end-to-end) por vez
 - Nao fazer slice horizontal por camada sem entrega de fluxo completo
+- Planejar slices enxutos: poucos arquivos (ideal <= 5), so o necessario
+- Para implementador LLM com contexto zero, incluir no slice: handoff + prompt + criterios de sucesso + gates de autoavaliacao
 - Executar RED -> GREEN -> REFACTOR dentro de cada slice
 - Exigir `design.md` para o change, exceto QUICK de bugfix simples
 - Rodar validacoes da secao 2
 - Atualizar `tasks.md` com [x]
 - Fazer commit e push do slice concluido
+- Gerar relatorio detalhado com snippets antes/depois em markdown temporario
+- Informar `REPORT_PATH=<arquivo.md>` para avaliacao do planner
 - **PARAR e pedir confirmacao para proxima task**
 
 ## 7. Definition of Done (DoD)
@@ -161,6 +166,8 @@ Crie `AGENTS.md` na raiz com este conteúdo mínimo:
 - [ ] Tasks e specs atualizadas
 - [ ] Commit feito com mensagem clara
 - [ ] Push realizado
+- [ ] Relatorio do slice gerado em markdown temporario com snippets antes/depois
+- [ ] REPORT_PATH informado para avaliacao do planner
 
 ## 8. Anti-patterns Proibidos
 - Nao criar God classes/services
@@ -171,9 +178,14 @@ Crie `AGENTS.md` na raiz com este conteúdo mínimo:
 - Read AGENTS.md and PROJECT_CONTEXT.md first.
 - Implement ONLY the next incomplete slice from tasks/spec.
 - Use vertical slicing (end-to-end); avoid horizontal slicing by layer.
+- Keep the slice lean: touch only minimum files needed (ideal <= 5).
 - Follow TDD cycle: RED (failing test) -> GREEN (minimal pass) -> REFACTOR (clean safely).
+- In REFACTOR, enforce clean code (clarity, cohesion, low coupling, no dead code).
 - If the active change is not a simple QUICK bugfix, require design.md before implementation.
+- Assume implementer is an LLM with zero context: include handoff, prompt, success criteria and self-eval gates in the slice file.
 - Run section 2 validation commands and update artifacts for the completed slice.
+- Create detailed implementation report with before/after snippets in temporary markdown.
+- Reply with REPORT_PATH=<temp-markdown-path> for planner review.
 - Commit and push the current branch.
 - STOP and ask for explicit confirmation before starting the next slice.
 ```
@@ -217,6 +229,10 @@ Adicione ao `.gitignore`:
 prompts/
 .env
 *.secret
+
+# Relatórios temporários de slice
+tmp/
+.tmp/
 
 # OpenSpec (dados temporários)
 openspec/changes/*/  # mantém apenas archive/
