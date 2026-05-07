@@ -1,59 +1,103 @@
 # Slice Handoff Template (LLM Contexto Zero)
 
+> Compatibilidade: para novos changes, preferir `templates/slices/slice-handoff.md`.
+
+Objetivo: contexto mínimo suficiente para uma slice vertical.
+
 ## 1) Identificacao
+
 - Change: `<change-id>`
 - Slice: `<X.Y>`
 - Titulo: `<resumo curto>`
 - Dependencias: `<slices previos / nenhuma>`
 
-## 2) Objetivo vertical (end-to-end)
+## 2) Contratos congelados
+
+Fonte: `openspec/changes/active/<change-id>/design.md#contract-freeze`
+
+- Interfaces/APIs usadas:
+- DTOs/schemas/payloads:
+- Invariantes:
+- Mudanca de contrato permitida? `nao`, salvo aprovacao explicita aqui:
+
+## 3) Fronteiras arquiteturais
+
+Fonte: `openspec/project.md`
+
+- Camadas/modulos tocados:
+- Direcao de dependencia a preservar:
+- Fronteiras de integracao/persistencia:
+
+## 4) Escopo
+
+### Arquivos/areas permitidos
+
+- `caminho/arquivo-ou-diretorio`
+
+### Arquivos/areas proibidos
+
+- `caminho/arquivo-ou-diretorio`
+
+### Non-goals explicitos
+
+- <o que esta slice nao deve fazer>
+
+Se precisar expandir escopo, parar e justificar antes de codar.
+
+## 5) Objetivo vertical
+
 - Valor entregue ao usuario/negocio:
 - Fluxo completo coberto:
 
-## 3) Escopo enxuto (so o necessario)
-- Arquivos permitidos para alteracao:
-  - `caminho/arquivo-1`
-  - `caminho/arquivo-2`
-- Limite alvo: poucos arquivos (ideal <= 5).
-- Se precisar expandir escopo, registrar justificativa antes de codar.
+## 6) Plano TDD
 
-## 4) Handoff funcional/tecnico
-- Contexto minimo de negocio:
-- Regras nao negociaveis:
-- Contratos/interfaces que nao podem quebrar:
-- Riscos conhecidos:
+- RED: <teste/comportamento falhando primeiro>
+- GREEN: <implementacao minima para passar>
+- REFACTOR: <limpeza preservando leis e contratos>
 
-## 5) Prompt pronto para implementador (copiar/colar)
+## 7) Gates
+
+- [ ] Evidencia RED/GREEN/REFACTOR capturada
+- [ ] Comandos de validacao do `AGENTS.md` executados ou justificados
+- [ ] Contratos congelados preservados
+- [ ] Arquivos permitidos/proibidos respeitados
+- [ ] `tasks.md` atualizado
+
+## 8) Criterios de sucesso
+
+- [ ] Comportamento vertical entregue
+- [ ] Testes representam comportamento/contratos
+- [ ] Nenhum escopo proibido adicionado
+- [ ] Nenhuma mudanca de contrato sem aprovacao
+- [ ] Relatorio de evidencia gerado
+
+## 9) Relatorio de evidencia
+
+Agente implementador usa `templates/reports/implementation-report.md` e inclui:
+
+- arquivos alterados e motivo
+- gates executados e resultados
+- aderencia aos contratos/escopo
+- foco para reviewer e follow-ups
+
+Agente reviewer/planner usa `templates/reports/planner-review.md` para aprovar, aprovar com follow-ups ou rejeitar.
+
+Saida obrigatoria:
+
 ```text
-Leia AGENTS.md, PROJECT_CONTEXT.md e este slice.
-Implemente APENAS este slice com visao vertical.
-Siga TDD: RED -> GREEN -> REFACTOR.
-No REFACTOR, priorize clean code (coesao, nomes claros, baixo acoplamento, sem codigo morto).
-Toque apenas os arquivos permitidos; se extrapolar, justifique.
-Ao final, execute os gates, gere relatorio detalhado com snippets antes/depois e salve em markdown temporario.
-Responda com REPORT_PATH=<caminho-do-arquivo.md>.
+REPORT_PATH=<caminho-do-relatorio.md>
 ```
 
-## 6) Criterios de sucesso
-- [ ] Comportamento esperado entregue ponta a ponta
-- [ ] Testes novos/ajustados representam o comportamento
-- [ ] Nenhum contrato quebrado
-- [ ] Escopo mantido enxuto
+## 10) Prompt para implementador
 
-## 7) Gates de autoavaliacao
-- [ ] RED documentado (teste falhando antes da implementacao)
-- [ ] GREEN documentado (teste passando com minimo)
-- [ ] REFACTOR documentado (limpeza sem regressao)
-- [ ] Testes/lint/type-check da secao 2 do AGENTS.md
-- [ ] Artefatos do change atualizados (`tasks.md`, specs, notas)
-
-## 8) Relatorio obrigatorio para o planner
-Gerar markdown temporario com:
-1. resumo do que foi implementado
-2. lista de arquivos alterados e justificativa
-3. evidencias dos gates executados
-4. snippets antes/depois das mudancas principais
-5. riscos pendentes e proximos passos
-
-Saida obrigatoria no chat:
-- `REPORT_PATH=<caminho-do-relatorio-temporario.md>`
+```text
+Leia openspec/project.md, docs/foundations/llm-engineering-principles.md, AGENTS.md, PROJECT_CONTEXT.md, proposal/design/tasks do change ativo e este slice.
+Implemente APENAS esta slice.
+Preserve contratos congelados e fronteiras arquiteturais.
+Toque apenas arquivos/areas permitidos; nao toque arquivos/areas proibidos.
+Siga o plano TDD: RED -> GREEN -> REFACTOR.
+Execute os gates obrigatorios.
+Gere o relatorio de implementacao e responda com REPORT_PATH=<caminho-do-relatorio.md>.
+Nao aprove o proprio trabalho; o reviewer/planner gate e separado.
+PARE apos esta slice.
+```
