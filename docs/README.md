@@ -2,6 +2,7 @@
 
 - `../SOP.md` — procedimento operacional principal
 - `../openspec/project.md` — leis permanentes do repositório
+- `using-devloop.md` — visão integrada: bootstrap + workflow governance
 - `getting-started.md` — tutorial prático (novo projeto e projeto existente)
 - `inventory-skills.md` — inventário, sobreposição e decisões de `.devloop/skills/`
 - `migration-map.md` — mapa de renomeação/migração
