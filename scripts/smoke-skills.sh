@@ -119,6 +119,7 @@ for required in \
   project-context-maintainer \
   quality-gate-executor \
   setup-solopreneur-project \
+  devloop-upgrader \
   changelog-updater \
   release-evidence-pack-generator \
   refactor-sprint-suggester \

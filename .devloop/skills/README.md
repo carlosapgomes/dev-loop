@@ -22,6 +22,7 @@ Este diretório foi reorganizado por função (e não por origem de modelo).
 - `quality-gate-executor`
 - `adr-generator`
 - `artifacts-consistency-checker`
+- `devloop-upgrader`
 
 Exemplos:
 
@@ -29,6 +30,7 @@ Exemplos:
 python3 .devloop/skills/core/setup-solopreneur-project/setup_project.py --project-root . --include-openspec
 python3 .devloop/skills/core/classify-change-risk/classify_risk.py "Implementar integração SSO" --format markdown
 python3 .devloop/skills/core/quality-gate-executor/quality_gate.py --format markdown
+python3 .devloop/skills/core/devloop-upgrader/upgrade_devloop.py --project-root ../my-project --plan
 ```
 
 ## Playbooks

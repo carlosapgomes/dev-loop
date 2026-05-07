@@ -30,7 +30,7 @@ DevLoop should:
 
 ---
 
-# Target Workflow ✅
+## Target Workflow ✅
 
 Proposal
 → Design
@@ -45,7 +45,7 @@ Canonical templates live in `templates/`.
 
 ---
 
-# Guiding Principles ✅
+## Guiding Principles ✅
 
 Canonical interpretation lives in:
 
@@ -55,13 +55,13 @@ Traditional software engineering principles are interpreted for LLM workflows as
 
 ---
 
-# Phase 1 — Structural Stabilization ✅
+## Phase 1 — Structural Stabilization ✅
 
-## Goal
+### Phase 1 Goal
 
 Remove path drift and structural inconsistencies.
 
-## Implemented
+### Phase 1 Implemented
 
 - Normalized OpenSpec directory layout
 - Standardized skills source strategy
@@ -96,9 +96,9 @@ Decision: `templates/` remains at repository root for now. `.devloop/templates` 
 
 ---
 
-# Phase 2 — Lifecycle Formalization ✅
+## Phase 2 — Lifecycle Formalization ✅
 
-## Implemented
+### Phase 2 Implemented
 
 Canonical templates created:
 
@@ -113,29 +113,29 @@ Lifecycle documented in `SOP.md`, `README.md`, `docs/getting-started.md`, and `t
 
 ---
 
-# Phase 3 — Contract Freeze System 🟡
+## Phase 3 — Contract Freeze System 🟡
 
-## Implemented
+### Phase 3 Implemented
 
 - Contract Freeze section added to `templates/openspec/design.md`
 - Slice handoffs inherit `design.md#contract-freeze`
 - AGENTS/templates reference frozen contracts
 
-## Still Manual
+### Phase 3 Still Manual
 
 - No validator yet checks Contract Freeze completeness
 - No automation blocks tasks/slices if contracts are missing
 - No forbidden-file enforcement yet
 
-## Recommended Next Step
+### Phase 3 Recommended Next Step
 
 Implement Phase 9 validators for Contract Freeze presence and slice inheritance.
 
 ---
 
-# Phase 4 — Repository Laws ✅
+## Phase 4 — Repository Laws ✅
 
-## Implemented
+### Phase 4 Implemented
 
 Created:
 
@@ -153,9 +153,9 @@ Defined:
 
 ---
 
-# Phase 5 — Slice Handoff Hardening ✅
+## Phase 5 — Slice Handoff Hardening ✅
 
-## Implemented
+### Phase 5 Implemented
 
 Slice handoff now requires:
 
@@ -175,9 +175,9 @@ Primary template:
 
 ---
 
-# Phase 6 — Evidence & Reviewer Gate ✅
+## Phase 6 — Evidence & Reviewer Gate ✅
 
-## Implemented
+### Phase 6 Implemented
 
 Formalized:
 
@@ -194,9 +194,9 @@ Templates:
 
 ---
 
-# Phase 7 — Engineering Philosophy Consolidation ✅
+## Phase 7 — Engineering Philosophy Consolidation ✅
 
-## Implemented
+### Phase 7 Implemented
 
 Created:
 
@@ -206,9 +206,9 @@ AGENTS/templates reference the canonical doc instead of duplicating principle ex
 
 ---
 
-# Phase 8 — OpenSpec Synchronization Strategy ✅
+## Phase 8 — OpenSpec Synchronization Strategy ✅
 
-## Implemented
+### Phase 8 Implemented
 
 Created:
 
@@ -224,13 +224,37 @@ Defined:
 
 ---
 
-# Phase 9 — Automation & Validation ⏭️
+## Phase 9A — DevLoop Upgrade Assistant ✅
 
-## Goal
+### Phase 9A Goal
 
-Reduce manual enforcement.
+Help existing projects migrate from older DevLoop structures to DevLoop v2 safely.
 
-## Recommended Future Tasks
+### Phase 9A Implemented
+
+Created:
+
+- `.devloop/skills/core/devloop-upgrader/`
+
+The upgrader supports:
+
+- `--check`
+- `--plan`
+- `--apply-safe`
+- backups for replaced markdown automation scripts
+- manual warnings for risky active-change changes
+
+Safety rule: detect much, apply little, never rewrite active planning artifacts silently.
+
+---
+
+## Phase 9B — Automation & Validation ⏭️
+
+### Phase 9B Goal
+
+Reduce manual enforcement for lifecycle artifacts.
+
+### Phase 9B Recommended Future Tasks
 
 1. Validate lifecycle completeness
 2. Detect missing Contract Freeze sections
@@ -239,7 +263,7 @@ Reduce manual enforcement.
 5. Check forbidden file modifications against slice handoff
 6. Gate archive based on reports/tests/reviewer approval
 
-## Suggested Implementation Order
+### Phase 9B Suggested Implementation Order
 
 1. Extend `artifacts-consistency-checker` with lifecycle checks
 2. Add Contract Freeze presence/completeness checks
@@ -249,7 +273,7 @@ Reduce manual enforcement.
 
 ---
 
-# Final Goal
+## Final Goal
 
 DevLoop v2 should function as:
 

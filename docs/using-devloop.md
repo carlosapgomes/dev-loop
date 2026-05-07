@@ -261,9 +261,29 @@ docs/prompt-playbooks.md
 .devloop/skills/README.md
 ```
 
+## Upgrade Existing DevLoop Projects
+
+For projects that already use an older DevLoop structure, read `docs/upgrading-existing-projects.md` and use the conservative upgrade assistant:
+
+```bash
+python3 "$DEVLOOP_HOME/.devloop/skills/core/devloop-upgrader/upgrade_devloop.py" \
+  --project-root /path/to/project \
+  --plan --output devloop-upgrade-plan.md
+```
+
+Apply only safe additive changes:
+
+```bash
+python3 "$DEVLOOP_HOME/.devloop/skills/core/devloop-upgrader/upgrade_devloop.py" \
+  --project-root /path/to/project \
+  --apply-safe
+```
+
+The upgrader does not rewrite `AGENTS.md`, `PROJECT_CONTEXT.md`, or active changes. It reports risky/manual actions instead.
+
 ## Current Recommended Next Step
 
-Phase 9: add lightweight validation automation for:
+Phase 9B: add lightweight validation automation for:
 
 - lifecycle completeness
 - Contract Freeze presence
