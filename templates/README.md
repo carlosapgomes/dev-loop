@@ -34,6 +34,20 @@ Templates canônicos:
 
 Keep reports concise and operational.
 
+## Prompt Playbooks
+
+Reusable prompts for reasoning-model sessions:
+
+- `prompts/devloop-planner-router.md`
+- `prompts/new-project-discovery.md`
+- `prompts/new-project-artifacts.md`
+- `prompts/new-feature-discovery.md`
+- `prompts/new-feature-artifacts.md`
+- `prompts/execute-slice.md`
+- `prompts/review-slice.md`
+
+Usage guide: `docs/prompt-playbooks.md`.
+
 ## Markdown Automation
 
 - `markdown-automation/README.md`

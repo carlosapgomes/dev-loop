@@ -211,6 +211,21 @@ Compatibility policy lives in:
 docs/openspec-compatibility.md
 ```
 
+## Use with a Reasoning LLM
+
+For guided sessions, use the prompt playbooks:
+
+```text
+docs/prompt-playbooks.md
+templates/prompts/
+```
+
+Recommended entry points:
+
+- new project: `templates/prompts/new-project-discovery.md`
+- new feature: `templates/prompts/new-feature-discovery.md`
+- unsure where to start: `templates/prompts/devloop-planner-router.md`
+
 ## Main Reference Files
 
 Use these when resuming work:
@@ -223,6 +238,7 @@ openspec/project.md
 docs/foundations/llm-engineering-principles.md
 docs/openspec-compatibility.md
 templates/README.md
+docs/prompt-playbooks.md
 .devloop/skills/README.md
 ```
 

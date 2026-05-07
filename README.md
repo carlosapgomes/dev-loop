@@ -14,6 +14,7 @@ Kit de workflow para desenvolvimento assistido por IA com foco em:
 - OpenSpec compatibility: [`docs/openspec-compatibility.md`](docs/openspec-compatibility.md)
 - LLM engineering principles: [`docs/foundations/llm-engineering-principles.md`](docs/foundations/llm-engineering-principles.md)
 - How to use DevLoop: [`docs/using-devloop.md`](docs/using-devloop.md)
+- Prompt playbooks: [`docs/prompt-playbooks.md`](docs/prompt-playbooks.md)
 - Tutorial de uso: [`docs/getting-started.md`](docs/getting-started.md)
 
 ## Lifecycle canônico
