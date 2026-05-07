@@ -460,6 +460,236 @@ def check_active_change_artifacts(root: Path, rep: Reporter) -> None:
             rep.bump(category, "design_optional_absent")
 
 
+
+REQUIRED_CONTRACT_FREEZE_SECTIONS = [
+    "Frozen Interfaces",
+    "DTOs / Schemas / Payloads",
+    "Invariants",
+    "Allowed Files / Areas",
+    "Forbidden Files / Areas",
+    "Technical Non-goals",
+    "Testing Strategy",
+]
+
+REQUIRED_SLICE_SECTIONS = [
+    "Frozen Contracts",
+    "Architectural Boundaries",
+    "Allowed Files / Areas",
+    "Forbidden Files / Areas",
+    "Explicit Non-goals",
+    "TDD Plan",
+    "Required Gates",
+    "Success Criteria",
+    "Evidence Report",
+]
+
+
+def has_heading(text: str, heading: str) -> bool:
+    pattern = rf"^#+\s+{re.escape(heading)}\s*$"
+    return bool(re.search(pattern, text, re.MULTILINE | re.IGNORECASE))
+
+
+def section_contains(text: str, term: str) -> bool:
+    return term.lower() in text.lower()
+
+
+def find_slice_files(change_dir: Path) -> List[Path]:
+    candidates: List[Path] = []
+    for rel in ["slices", "slice", "handoffs"]:
+        d = change_dir / rel
+        if d.exists():
+            candidates.extend(sorted(d.rglob("*.md")))
+    candidates.extend(sorted(change_dir.glob("*slice*.md")))
+    # Deduplicate while preserving order.
+    seen = set()
+    out = []
+    for path in candidates:
+        if path in seen:
+            continue
+        seen.add(path)
+        out.append(path)
+    return out
+
+
+def check_lifecycle_governance(root: Path, rep: Reporter) -> None:
+    category = "lifecycle_governance"
+    active_root = root / "openspec" / "changes" / "active"
+    if not active_root.exists():
+        rep.bump(category, "active_dir_missing")
+        return
+
+    changes = sorted([path for path in active_root.iterdir() if path.is_dir()])
+    if not changes:
+        rep.bump(category, "no_active_changes")
+        return
+
+    for change_dir in changes:
+        proposal = change_dir / "proposal.md"
+        design = change_dir / "design.md"
+        tasks = change_dir / "tasks.md"
+        proposal_text = read_text(proposal)
+        design_required, declared_level, _ = design_required_for_change(proposal_text)
+
+        if design_required and design.exists():
+            design_text = read_text(design)
+            if not has_heading(design_text, "Contract Freeze"):
+                rep.add(
+                    "error",
+                    category,
+                    f"Contract Freeze ausente em design.md: {change_dir.name}",
+                    files=[str(design.relative_to(root))],
+                    suggestion="Adicionar secao ## Contract Freeze antes de planejar/executar slices.",
+                )
+                rep.bump(category, "missing_contract_freeze")
+            else:
+                rep.bump(category, "contract_freeze_present")
+                missing = [section for section in REQUIRED_CONTRACT_FREEZE_SECTIONS if not section_contains(design_text, section)]
+                if missing:
+                    rep.add(
+                        "warning",
+                        category,
+                        f"Contract Freeze incompleto em {change_dir.name}",
+                        details=", ".join(missing),
+                        files=[str(design.relative_to(root))],
+                        suggestion="Completar os campos minimos do Contract Freeze.",
+                    )
+                    rep.bump(category, "contract_freeze_incomplete")
+                else:
+                    rep.bump(category, "contract_freeze_complete")
+
+        if tasks.exists():
+            tasks_text = read_text(tasks)
+            if design_required and "contract-freeze" not in tasks_text.lower() and "Contract Freeze" not in tasks_text:
+                rep.add(
+                    "warning",
+                    category,
+                    f"tasks.md nao referencia Contract Freeze: {change_dir.name}",
+                    files=[str(tasks.relative_to(root))],
+                    suggestion="Referenciar design.md#contract-freeze em cada slice planejada.",
+                )
+                rep.bump(category, "tasks_missing_contract_reference")
+
+        slice_files = find_slice_files(change_dir)
+        if tasks.exists() and "slice" in read_text(tasks).lower() and not slice_files:
+            rep.add(
+                "warning",
+                category,
+                f"tasks.md menciona slices, mas nenhum handoff de slice foi encontrado: {change_dir.name}",
+                files=[str(tasks.relative_to(root))],
+                suggestion="Criar handoffs em slices/ usando templates/slices/slice-handoff.md.",
+            )
+            rep.bump(category, "missing_slice_handoffs")
+
+        for slice_file in slice_files:
+            text = read_text(slice_file)
+            missing_sections = [section for section in REQUIRED_SLICE_SECTIONS if not section_contains(text, section)]
+            if missing_sections:
+                rep.add(
+                    "warning",
+                    category,
+                    f"Slice handoff incompleto: {slice_file.name}",
+                    details=", ".join(missing_sections),
+                    files=[str(slice_file.relative_to(root))],
+                    suggestion="Atualizar handoff com secoes minimas do template canonico.",
+                )
+                rep.bump(category, "slice_handoff_incomplete")
+            else:
+                rep.bump(category, "slice_handoff_complete")
+
+            if "design.md#contract-freeze" not in text.lower():
+                rep.add(
+                    "error" if design_required else "warning",
+                    category,
+                    f"Slice nao herda Contract Freeze explicitamente: {slice_file.name}",
+                    files=[str(slice_file.relative_to(root))],
+                    suggestion="Adicionar referencia a design.md#contract-freeze.",
+                )
+                rep.bump(category, "slice_missing_contract_reference")
+
+        reports_dir = change_dir / "reports"
+        if reports_dir.exists():
+            implementation_reports = list(reports_dir.rglob("*implementation*.md"))
+            planner_reviews = list(reports_dir.rglob("*review*.md"))
+            if implementation_reports and not planner_reviews:
+                rep.add(
+                    "warning",
+                    category,
+                    f"Implementation reports sem planner review correspondente: {change_dir.name}",
+                    files=[str(p.relative_to(root)) for p in implementation_reports[:5]],
+                    suggestion="Registrar planner review usando templates/reports/planner-review.md.",
+                )
+                rep.bump(category, "missing_planner_review")
+
+
+def parse_forbidden_files_from_slices(root: Path) -> List[str]:
+    forbidden: List[str] = []
+    active_root = root / "openspec" / "changes" / "active"
+    if not active_root.exists():
+        return forbidden
+    for change_dir in active_root.iterdir():
+        if not change_dir.is_dir():
+            continue
+        for slice_file in find_slice_files(change_dir):
+            lines = read_text(slice_file).splitlines()
+            in_forbidden = False
+            for line in lines:
+                stripped = line.strip()
+                if re.match(r"^#+\s+.*forbidden", stripped, re.IGNORECASE) or "Arquivos/areas proibidos" in stripped:
+                    in_forbidden = True
+                    continue
+                if in_forbidden and stripped.startswith("#"):
+                    in_forbidden = False
+                if in_forbidden and stripped.startswith("-"):
+                    match = re.search(r"`([^`]+)`", stripped)
+                    value = match.group(1) if match else stripped.lstrip("- ").strip()
+                    if value and not value.startswith("<"):
+                        forbidden.append(value.rstrip("/"))
+    return forbidden
+
+
+def check_forbidden_file_modifications(root: Path, rep: Reporter) -> None:
+    category = "forbidden_files"
+    forbidden = parse_forbidden_files_from_slices(root)
+    if not forbidden:
+        rep.bump(category, "no_forbidden_files_declared")
+        return
+
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(root), "diff", "--name-only", "HEAD"],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+    except OSError:
+        rep.bump(category, "git_unavailable")
+        return
+
+    if proc.returncode != 0:
+        rep.bump(category, "git_diff_failed")
+        return
+
+    changed = [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+    violations = []
+    for changed_path in changed:
+        for forbidden_path in forbidden:
+            if changed_path == forbidden_path or changed_path.startswith(forbidden_path + "/"):
+                violations.append(changed_path)
+
+    if violations:
+        rep.add(
+            "error",
+            category,
+            "Arquivos proibidos foram modificados",
+            details=", ".join(sorted(set(violations))[:10]),
+            files=sorted(set(violations))[:10],
+            suggestion="Reverter alteracoes ou obter aprovacao explicita do planner/reviewer.",
+        )
+        rep.bump(category, "forbidden_modification_detected")
+    else:
+        rep.bump(category, "no_forbidden_modifications")
+
+
 def check_specs_vs_code(root: Path, rep: Reporter, max_specs: int = 25) -> None:
     category = "specs_vs_code"
     specs_root = root / "openspec" / "specs"
@@ -780,6 +1010,8 @@ def run_checks(root: Path, run_commands: bool, timeout: int, max_specs: int, max
     rep = Reporter()
     check_required_files(root, rep)
     check_active_change_artifacts(root, rep)
+    check_lifecycle_governance(root, rep)
+    check_forbidden_file_modifications(root, rep)
     check_specs_vs_code(root, rep, max_specs=max_specs)
     check_adrs_vs_implementation(root, rep, max_adrs=max_adrs)
     check_agents(root, rep, run_commands=run_commands, timeout=timeout)

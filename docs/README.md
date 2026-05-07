@@ -10,6 +10,7 @@
 - `migration-map.md` — mapa de renomeação/migração
 - `script-backlog.md` — plano de scriptização de playbooks
 - `cli-conventions.md` — padrão de flags e códigos de saída dos scripts
+- Lifecycle validation: `.devloop/skills/core/artifacts-consistency-checker/check_consistency.py`
 - `deprecated-paths.md` — caminhos legados e paths canônicos de OpenSpec/skills
 - `openspec-compatibility.md` — política de compatibilidade/sincronização com OpenSpec upstream
 - `foundations/llm-engineering-principles.md` — interpretação canônica de princípios para agentes LLM

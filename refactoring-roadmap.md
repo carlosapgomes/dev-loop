@@ -248,28 +248,29 @@ Safety rule: detect much, apply little, never rewrite active planning artifacts 
 
 ---
 
-## Phase 9B — Automation & Validation ⏭️
+## Phase 9B — Automation & Validation ✅
 
 ### Phase 9B Goal
 
 Reduce manual enforcement for lifecycle artifacts.
 
-### Phase 9B Recommended Future Tasks
+### Phase 9B Implemented
 
-1. Validate lifecycle completeness
-2. Detect missing Contract Freeze sections
-3. Validate slice handoff structure
-4. Ensure implementation reports and planner reviews exist
-5. Check forbidden file modifications against slice handoff
-6. Gate archive based on reports/tests/reviewer approval
+Extended `.devloop/skills/core/artifacts-consistency-checker/check_consistency.py` with lightweight lifecycle governance checks:
 
-### Phase 9B Suggested Implementation Order
+1. Contract Freeze presence checks
+2. Contract Freeze completeness warnings
+3. `tasks.md` Contract Freeze reference checks
+4. slice handoff structure checks
+5. implementation-report/planner-review pairing warnings
+6. forbidden-file diff checks against slice handoffs
 
-1. Extend `artifacts-consistency-checker` with lifecycle checks
-2. Add Contract Freeze presence/completeness checks
-3. Add slice handoff required-section checks
-4. Add evidence/reviewer gate checks
-5. Add optional forbidden-file diff checker
+### Phase 9B Remaining Future Enhancements
+
+- stricter archive gate validation
+- report-to-slice matching by slice id
+- optional CI integration
+- more precise forbidden-file scoping for selected active slice
 
 ---
 

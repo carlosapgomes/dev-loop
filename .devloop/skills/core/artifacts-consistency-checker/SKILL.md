@@ -14,6 +14,8 @@ Este skill valida a consistência entre diferentes artefatos do projeto, garanti
 - Quando há suspeita de desalinhamento entre documentação e código
 - Como parte da geração de Release Evidence Packs
 - Para auditoria interna de qualidade
+- Antes de executar ou revisar slices DevLoop v2
+- Antes de arquivar um change ativo
 
 ## 🐍 Método Recomendado: Script Python
 
@@ -71,6 +73,15 @@ python3 check_consistency.py --root . --run-commands --timeout 60
 - `design.md` e obrigatorio por padrao
 - Excecao de `design.md`: apenas `QUICK` de bugfix simples e reversivel
 - `QUICK` sem sinal claro de bugfix simples deve ser reclassificado para `FEATURE`/`HIGH`
+
+### 7. Lifecycle DevLoop v2
+
+- FEATURE/HIGH com `design.md` devem conter `## Contract Freeze`
+- Contract Freeze deve declarar contratos, invariantes, boundaries, allowed/forbidden files, non-goals e testing strategy
+- `tasks.md` deve referenciar `design.md#contract-freeze` quando houver slices
+- slice handoffs devem conter contratos herdados, boundaries, allowed/forbidden files, non-goals, plano TDD, gates, critérios de sucesso e evidence report
+- implementation reports devem ter planner review correspondente quando presentes
+- arquivos proibidos declarados no slice não devem aparecer no diff atual
 
 ## Processo de verificação
 

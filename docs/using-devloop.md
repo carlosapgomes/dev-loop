@@ -281,13 +281,38 @@ python3 "$DEVLOOP_HOME/.devloop/skills/core/devloop-upgrader/upgrade_devloop.py"
 
 The upgrader does not rewrite `AGENTS.md`, `PROJECT_CONTEXT.md`, or active changes. It reports risky/manual actions instead.
 
+## Validate DevLoop Lifecycle Artifacts
+
+Use the artifacts consistency checker to validate active DevLoop/OpenSpec work:
+
+```bash
+python3 "$DEVLOOP_HOME/.devloop/skills/core/artifacts-consistency-checker/check_consistency.py" \
+  --root . \
+  --format markdown
+```
+
+This now checks:
+
+- active changes have required `proposal.md`, `design.md`, and `tasks.md`
+- FEATURE/HIGH designs include `## Contract Freeze`
+- Contract Freeze includes minimum operational sections
+- `tasks.md` references `design.md#contract-freeze`
+- slice handoffs include required context-zero sections
+- implementation reports have planner reviews when reports exist
+- forbidden files declared in slice handoffs were not modified in the current diff
+
+Use this before:
+
+- implementing a slice
+- handing off to reviewer/planner
+- archiving a change
+- merging DevLoop artifact changes
+
 ## Current Recommended Next Step
 
-Phase 9B: add lightweight validation automation for:
+Future Phase 9B enhancements:
 
-- lifecycle completeness
-- Contract Freeze presence
-- slice handoff structure
-- evidence/report presence
-- reviewer gate presence
-- forbidden file changes
+- stricter archive gate validation
+- report-to-slice matching by slice id
+- optional CI integration
+- more precise forbidden-file scoping for selected active slice
