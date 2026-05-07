@@ -1,6 +1,6 @@
 # Convenções de CLI (scripts do DevLoop)
 
-Padrão adotado para scripts em `skills/core`, `skills/playbooks` e `skills/domain`.
+Padrão adotado para scripts em `.devloop/skills/core`, `.devloop/skills/playbooks` e `.devloop/skills/domain`.
 
 ## Flags comuns
 

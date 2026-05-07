@@ -6,6 +6,7 @@ cd "$ROOT_DIR"
 
 RUN_TESTS=true
 INCLUDE_LEGACY=false
+SKILLS_ROOT=".devloop/skills"
 
 for arg in "$@"; do
   case "$arg" in
@@ -57,7 +58,7 @@ python3 - <<'PY'
 from pathlib import Path
 import re
 
-root = Path("skills")
+root = Path(".devloop/skills")
 issues = []
 for skill_md in sorted(root.rglob("SKILL.md")):
     txt = skill_md.read_text(encoding="utf-8", errors="ignore")
@@ -82,13 +83,13 @@ python3 - <<'PY'
 from pathlib import Path
 import py_compile
 
-for p in sorted(Path("skills").rglob("*.py")):
+for p in sorted(Path(".devloop/skills").rglob("*.py")):
     py_compile.compile(str(p), doraise=True)
 print("py_compile ok")
 PY
 
 log "3) Smoke de CLI (--help)"
-mapfile -t cli_scripts < <(find skills -type f -name '*.py' -not -path '*/tests/*' | sort)
+mapfile -t cli_scripts < <(find "$SKILLS_ROOT" -type f -name '*.py' -not -path '*/tests/*' | sort)
 for script in "${cli_scripts[@]}"; do
   python3 "$script" --help >/dev/null
   echo "  - ok: $script"
@@ -96,7 +97,7 @@ done
 
 if [[ "$RUN_TESTS" == "true" ]]; then
   log "4) Executando testes"
-  mapfile -t test_scripts < <(find skills -type f -path '*/tests/test_*.py' | sort)
+  mapfile -t test_scripts < <(find "$SKILLS_ROOT" -type f -path '*/tests/test_*.py' | sort)
   for t in "${test_scripts[@]}"; do
     python3 "$t"
   done
@@ -108,7 +109,7 @@ log "5) Testando instalador de skills"
 TMP_INSTALL="$(mktemp -d)"
 trap 'rm -rf "$TMP_INSTALL"' EXIT
 
-bash skills/install_all_skills.sh "$TMP_INSTALL" >/dev/null
+bash "$SKILLS_ROOT/install_all_skills.sh" "$TMP_INSTALL" >/dev/null
 
 for required in \
   adr-generator \
@@ -130,7 +131,7 @@ for required in \
 done
 
 if [[ "$INCLUDE_LEGACY" == "true" ]]; then
-  bash skills/install_all_skills.sh "$TMP_INSTALL" --include-legacy >/dev/null
+  bash "$SKILLS_ROOT/install_all_skills.sh" "$TMP_INSTALL" --include-legacy >/dev/null
   for legacy in esaa-classify-risk esaa-generate-agents esaa-generate-context esaa-django-insights esaa-project-resurrection esaa-suggest-adr esaa-validate-agents; do
     [[ -d "$TMP_INSTALL/$legacy" ]] || { echo "[smoke] legacy faltando: $legacy" >&2; exit 1; }
   done
@@ -151,15 +152,15 @@ EOF
 cat > "$TMP_POL/app.py" <<'EOF'
 API_KEY = "abc12345"
 EOF
-assert_exit_code 2 python3 skills/playbooks/validate-agents/validate_agents.py --project-root "$TMP_POL" "$TMP_POL/app.py"
+assert_exit_code 2 python3 "$SKILLS_ROOT/playbooks/validate-agents/validate_agents.py" --project-root "$TMP_POL" "$TMP_POL/app.py"
 
 # changelog empty policy fail
 mkdir -p "$TMP_POL/repo"
 git -C "$TMP_POL/repo" init -q
-assert_exit_code 2 python3 skills/playbooks/changelog-updater/update_changelog.py --project-root "$TMP_POL/repo" --dry-run --fail-on empty
+assert_exit_code 2 python3 "$SKILLS_ROOT/playbooks/changelog-updater/update_changelog.py" --project-root "$TMP_POL/repo" --dry-run --fail-on empty
 
 # release pack missing-any policy fail
-assert_exit_code 2 python3 skills/playbooks/release-evidence-pack-generator/generate_release_pack.py --project-root "$TMP_POL/repo" --version v0.0.1 --dry-run --fail-on missing-any
+assert_exit_code 2 python3 "$SKILLS_ROOT/playbooks/release-evidence-pack-generator/generate_release_pack.py" --project-root "$TMP_POL/repo" --version v0.0.1 --dry-run --fail-on missing-any
 
 # suggest-adr recommendation policy fail
 mkdir -p "$TMP_POL/repo/openspec/changes/active/risky"
@@ -167,6 +168,6 @@ cat > "$TMP_POL/repo/openspec/changes/active/risky/proposal.md" <<'EOF'
 # Risco alto
 Mudança de arquitetura com migration database e auth HIGH/ARCH.
 EOF
-assert_exit_code 2 python3 skills/playbooks/suggest-adr/suggest_adr.py --project-root "$TMP_POL/repo" risky --fail-on recommendation
+assert_exit_code 2 python3 "$SKILLS_ROOT/playbooks/suggest-adr/suggest_adr.py" --project-root "$TMP_POL/repo" risky --fail-on recommendation
 
 log "✅ Smoke tests concluídos com sucesso"

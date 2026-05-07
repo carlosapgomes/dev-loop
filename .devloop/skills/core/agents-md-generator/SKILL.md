@@ -201,7 +201,7 @@ Regras para escrita de testes:
 ## 4. Política de Testes
 - TDD obrigatório com ciclo RED -> GREEN -> REFACTOR
 - Nao iniciar implementação sem teste falhando primeiro (RED)
-- No REFACTOR, reforcar clean code (nomes claros, coesao, baixo acoplamento, sem codigo morto)
+- No REFACTOR, preservar as leis do repositorio em `openspec/project.md`
 - Distribuição: 70% unit, 25% integration, 5% E2E
 - Nomeação: `test_<cenário>_<resultado_esperado>`
 - Isolamento: testes não devem depender de estado externo
@@ -218,12 +218,13 @@ Regra para evitar loops descontrolados:
 - Implemente UMA task slice vertical (end-to-end) do `tasks.md` por vez
 - Nao faca slice horizontal por camada sem entrega de fluxo completo
 - Planeje slices enxutos: poucos arquivos (ideal <= 5), so o necessario
-- Para implementador LLM com contexto zero, inclua no slice: handoff + prompt + criterios de sucesso + gates de autoavaliacao
+- Lifecycle: Proposal -> Design -> Contract Freeze -> Task Planning -> Slice Execution -> Evidence Report -> Reviewer Gate -> Archive
+- Para implementador LLM com contexto zero, inclua no slice: Contract Freeze herdado + handoff + prompt + criterios de sucesso + gates de autoavaliacao
 - Execute o ciclo RED -> GREEN -> REFACTOR dentro de cada slice
-- No REFACTOR, aplique clean code
+- No REFACTOR, preserve as leis do repositorio em `openspec/project.md`
 - Após green (testes passam), faca commit e push
 - Atualize `tasks.md` marcando [x] na task concluída
-- Gere relatorio detalhado com snippets antes/depois em markdown temporario
+- Gere relatorio conciso e diff-oriented em markdown temporario
 - Informe `REPORT_PATH=<arquivo.md>` para avaliacao do planner
 - **PARE e peça confirmação explícita para próxima task**
 - Não continue sem confirmação do usuário

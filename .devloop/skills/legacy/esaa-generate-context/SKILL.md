@@ -824,7 +824,7 @@ Atualize `PROJECT_CONTEXT.md` quando:
 
 ```bash
 # Copiar para skills do Pi
-cp -r esaa-generate-context ~/.pi/skills/
+cp -r esaa-generate-context ~/.pi/agent/skills/
 
 # Disponível como /esaa-generate-context
 ```

@@ -795,7 +795,7 @@ if __name__ == "__main__":
 ## Instalação
 
 ```bash
-cp -r validate-agents ~/.pi/skills/
+cp -r validate-agents ~/.pi/agent/skills/
 pip install ast-unparse pyyaml
 ```
 

@@ -41,8 +41,12 @@ class SetupProjectTests(unittest.TestCase):
                 "PROJECT_CONTEXT.md",
                 "docs/adr/template.md",
                 "docs/releases/README.md",
+                "docs/foundations/llm-engineering-principles.md",
                 "tests/unit",
+                "openspec/project.md",
                 "openspec/specs",
+                "openspec/changes/active",
+                "openspec/changes/archive",
                 "scripts/markdown-format.sh",
                 "scripts/markdown-lint.sh",
                 ".githooks/pre-commit",
@@ -69,12 +73,16 @@ class SetupProjectTests(unittest.TestCase):
             self.assertIn("Nao quebrar o trabalho em slice horizontal por camada sem entrega de fluxo completo.", agents)
             self.assertIn("Planejar slices enxutos: tocar poucos arquivos (ideal <= 5) e so o necessario para entregar valor.", agents)
             self.assertIn("Cada slice deve incluir handoff + prompt pronto para implementador LLM com contexto zero.", agents)
+            self.assertIn("Cada slice deve herdar e preservar o Contract Freeze de design.md.", agents)
             self.assertIn(
-                "Antes de codar o change: design.md e obrigatorio, exceto QUICK de bugfix simples e reversivel.",
+                "Antes de codar o change: design.md com Contract Freeze e obrigatorio, exceto QUICK de bugfix simples e reversivel.",
                 agents,
             )
-            self.assertIn("No REFACTOR, reforcar clean code: nomes claros, funcoes coesas, baixo acoplamento e remocao de codigo morto.", agents)
-            self.assertIn("Gerar relatorio detalhado do slice com snippets antes/depois e salvar em markdown temporario.", agents)
+            self.assertIn("Leis permanentes do repositorio: openspec/project.md", agents)
+            self.assertIn("Principios de engenharia para agentes LLM: docs/foundations/llm-engineering-principles.md", agents)
+            self.assertIn("No REFACTOR, preservar as leis do repositorio em openspec/project.md.", agents)
+            self.assertIn("Gerar relatorio conciso e diff-oriented do slice em markdown temporario.", agents)
+            self.assertIn("Nao aprovar o proprio trabalho; reviewer/planner gate e separado.", agents)
             self.assertIn("REPORT_PATH informado para avaliacao do planner", agents)
             self.assertIn("Fazer commit com mensagem rastreavel e dar push para branch remota.", agents)
             self.assertIn("Push realizado para branch remota", agents)

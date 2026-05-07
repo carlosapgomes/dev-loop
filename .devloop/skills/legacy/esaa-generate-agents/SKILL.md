@@ -1191,7 +1191,7 @@ git commit -am "docs: update AGENTS.md with new stack"
 
 ```bash
 # 1. Copiar para skills do Pi
-cp -r esaa-generate-agents ~/.pi/skills/
+cp -r esaa-generate-agents ~/.pi/agent/skills/
 
 # 2. Instalar dependências
 pip install pyyaml packaging

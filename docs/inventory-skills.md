@@ -2,10 +2,10 @@
 
 ## Taxonomia atual
 
-- `skills/core`: canônicos executáveis
-- `skills/playbooks`: protocolos/guias (maioria com script auxiliar)
-- `skills/domain`: especialização por stack
-- `skills/legacy`: compatibilidade temporária
+- `.devloop/skills/core`: canônicos executáveis
+- `.devloop/skills/playbooks`: protocolos/guias (maioria com script auxiliar)
+- `.devloop/skills/domain`: especialização por stack
+- `.devloop/skills/legacy`: compatibilidade temporária
 
 ## Matriz de sobreposição
 

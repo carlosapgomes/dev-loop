@@ -17,17 +17,20 @@ from typing import Dict, List, Sequence, Tuple
 REQUIRED_DIRS = [
     "docs/adr",
     "docs/releases",
+    "docs/foundations",
     "tests/unit",
     "tests/integration",
     "tests/e2e",
     "scripts",
     "prompts",
+    # Deprecated compatibility path; canonical Pi runtime install target is ~/.pi/agent/skills.
     ".codex/skills",
     ".githooks",
 ]
 
 OPTIONAL_OPENSPEC_DIRS = [
     "openspec/specs",
+    "openspec/changes/active",
     "openspec/changes/archive",
 ]
 
@@ -37,6 +40,7 @@ REQUIRED_FILES = [
     "README.md",
     "docs/adr/README.md",
     "docs/adr/template.md",
+    "docs/foundations/llm-engineering-principles.md",
     "scripts/markdown-format.sh",
     "scripts/markdown-lint.sh",
     ".githooks/pre-commit",
@@ -49,8 +53,8 @@ GITIGNORE_LINES = [
     "*.secret",
     "tmp/",
     ".tmp/",
-    "openspec/changes/*/",
-    "!openspec/changes/archive/",
+    ".pi/",
+    ".codex/",
 ]
 
 
@@ -108,26 +112,31 @@ def _agents_fallback() -> str:
         "git config core.hooksPath .githooks\n"
         "```\n\n"
         "## 4. Arquitetura e Constraints\n"
+        "- Leis permanentes do repositorio: openspec/project.md.\n"
+        "- Principios de engenharia para agentes LLM: docs/foundations/llm-engineering-principles.md.\n"
         "- Definir boundaries por modulo.\n"
         "- Nao colocar logica de negocio em camada de apresentacao.\n\n"
         "## 5. Politica de Testes\n"
         "- TDD obrigatorio: RED (teste falha) -> GREEN (minimo para passar) -> REFACTOR (limpeza sem quebrar).\n"
         "- Nao iniciar implementacao sem primeiro teste falhando para o comportamento-alvo.\n"
-        "- No REFACTOR, reforcar clean code: nomes claros, funcoes coesas, baixo acoplamento e remocao de codigo morto.\n"
+        "- No REFACTOR, preservar as leis do repositorio em openspec/project.md.\n"
         "- Cobrir cenarios criticos e edge cases.\n\n"
         "## 6. Stop Rule (CRUCIAL)\n"
         "- Implementar um slice vertical por vez (end-to-end).\n"
         "- Nao quebrar o trabalho em slice horizontal por camada sem entrega de fluxo completo.\n"
         "- Planejar slices enxutos: tocar poucos arquivos (ideal <= 5) e so o necessario.\n"
         "- Se precisar ampliar escopo de arquivos, registrar justificativa em tasks/design antes de codar.\n"
+        "- Lifecycle: Proposal -> Design -> Contract Freeze -> Task Planning -> Slice Execution -> Evidence Report -> Reviewer Gate -> Archive.\n"
         "- Cada slice deve incluir handoff + prompt pronto para implementador LLM com contexto zero.\n"
+        "- Cada slice deve herdar e preservar o Contract Freeze de design.md.\n"
         "- O slice deve explicitar criterios de sucesso e gates de autoavaliacao antes da implementacao.\n"
-        "- Exigir design.md para o change, exceto QUICK de bugfix simples e reversivel.\n"
+        "- Exigir design.md com Contract Freeze para o change, exceto QUICK de bugfix simples e reversivel.\n"
         "- Rodar comandos da secao 2.\n"
         "- Atualizar tasks/specs com o status do slice.\n"
         "- Fazer commit com mensagem rastreavel e dar push para branch remota.\n"
-        "- Gerar relatorio detalhado do slice com snippets antes/depois e salvar em markdown temporario.\n"
+        "- Gerar relatorio conciso e diff-oriented do slice em markdown temporario.\n"
         "- Informar REPORT_PATH para avaliacao do planner.\n"
+        "- Nao aprovar o proprio trabalho; reviewer/planner gate e separado.\n"
         "- PARAR e pedir confirmacao explicita para o proximo slice.\n"
         "- Nao iniciar o proximo slice sem confirmacao explicita do usuario.\n\n"
         "## 7. Definition of Done (DoD)\n"
@@ -138,7 +147,7 @@ def _agents_fallback() -> str:
         "- [ ] Tasks/specs/docs atualizadas\n"
         "- [ ] Commit com mensagem clara\n"
         "- [ ] Push realizado para branch remota\n"
-        "- [ ] Relatorio do slice gerado em markdown temporario com snippets antes/depois\n"
+        "- [ ] Relatorio do slice gerado em markdown temporario, conciso e diff-oriented\n"
         "- [ ] REPORT_PATH informado para avaliacao do planner\n\n"
         "## 8. Anti-patterns Proibidos\n"
         "- Nao criar God classes/services.\n"
@@ -146,17 +155,18 @@ def _agents_fallback() -> str:
         "- Nao ignorar logs/telemetria em operacoes criticas.\n\n"
         "## 9. Prompt de Reentrada\n"
         "```text\n"
-        "Read AGENTS.md and PROJECT_CONTEXT.md first.\n"
+        "Read openspec/project.md, docs/foundations/llm-engineering-principles.md, AGENTS.md and PROJECT_CONTEXT.md first.\n"
         "Implement ONLY the next incomplete slice from tasks/spec.\n"
         "Use vertical slicing (end-to-end); avoid horizontal slicing by layer.\n"
         "Keep the slice lean: touch only the minimum files needed (ideal <= 5).\n"
         "Follow TDD cycle: RED (failing test) -> GREEN (minimal pass) -> REFACTOR (clean safely).\n"
-        "In REFACTOR, enforce clean code (clarity, cohesion, low coupling, no dead code).\n"
-        "If the active change is not a simple QUICK bugfix, require design.md before implementation.\n"
-        "Assume the implementer is an LLM with zero context: include handoff, prompt, success criteria and self-eval gates in the slice file.\n"
+        "In REFACTOR, preserve repository laws from openspec/project.md.\n"
+        "If the active change is not a simple QUICK bugfix, require design.md with Contract Freeze before implementation.\n"
+        "Assume the implementer is an LLM with zero context: include inherited contracts, handoff, prompt, success criteria and self-eval gates in the slice file.\n"
         "Run section 2 validation commands and update artifacts for the completed slice.\n"
-        "Create a detailed implementation report with before/after snippets in a temporary markdown file.\n"
-        "Reply with REPORT_PATH=<temp-markdown-path> for planner review.\n"
+        "Create a concise, diff-oriented implementation report in a temporary markdown file.\n"
+        "Reply with REPORT_PATH=<temp-markdown-path> for separate planner review.\n"
+        "Do not approve your own work.\n"
         "Commit and push the current branch.\n"
         "STOP and ask for explicit confirmation before starting the next slice.\n"
         "```\n"
@@ -169,6 +179,7 @@ def _context_fallback() -> str:
         "## Proposito\n"
         "Resumo executivo para retomada rapida apos pausas e onboarding.\n\n"
         "## Fontes Autoritativas\n"
+        "- `openspec/project.md`\n"
         "- `AGENTS.md`\n"
         "- `openspec/specs/` (quando existir)\n"
         "- `docs/adr/`\n"
@@ -189,6 +200,32 @@ def _context_fallback() -> str:
     )
 
 
+def _openspec_project_fallback() -> str:
+    return (
+        "# Project Laws\n\n"
+        "Permanent engineering constraints for low-drift agent work.\n\n"
+        "Canonical principle interpretation: `docs/foundations/llm-engineering-principles.md`.\n\n"
+        "## Authority\n\n"
+        "1. `openspec/project.md` — repository laws\n"
+        "2. Active `design.md#contract-freeze` — frozen change contracts\n"
+        "3. `tasks.md` and slice handoff — execution scope\n"
+        "4. `AGENTS.md` — local commands and agent rules\n\n"
+        "## Boundaries\n\n"
+        "- Keep domain behavior separate from UI, transport, persistence and integration details.\n"
+        "- Document unclear boundaries in `design.md` before coding.\n\n"
+        "## Dependencies and Layers\n\n"
+        "- Dependencies point toward stable domain concepts.\n"
+        "- Presentation validates and delegates; application coordinates; domain owns invariants; adapters translate external systems.\n\n"
+        "## Testing\n\n"
+        "- Use TDD for slice behavior: RED -> GREEN -> REFACTOR.\n"
+        "- Test observable behavior and frozen contracts.\n\n"
+        "## Engineering Principles\n\n"
+        "Use `docs/foundations/llm-engineering-principles.md` as the canonical interpretation of Clean Code, DRY, SOLID, YAGNI, TDD, and KISS.\n\n"
+        "Operationally: choose the option that reduces hidden assumptions, preserves frozen contracts, and makes the next slice easier to execute with zero context.\n"
+    )
+
+
+
 def _readme_fallback(project_name: str) -> str:
     return (
         f"# {project_name}\n\n"
@@ -202,6 +239,20 @@ def _readme_fallback(project_name: str) -> str:
         "- `docs/releases/`\n"
         "- `tests/`\n"
     )
+
+
+def _llm_engineering_principles_fallback() -> str:
+    return (
+        "# LLM Engineering Principles\n\n"
+        "Canonical principle interpretation for low-drift agent work.\n\n"
+        "- Clean Code: make the next agent's likely interpretation correct.\n"
+        "- DRY: avoid duplicated business meaning; accept mechanical duplication when clearer.\n"
+        "- SOLID: keep boundaries explicit; do not add patterns for their own sake.\n"
+        "- YAGNI: avoid future-proofing not required by the active Contract Freeze.\n"
+        "- TDD: constrain behavior with RED -> GREEN -> REFACTOR.\n"
+        "- KISS: choose the smallest understandable change that preserves contracts.\n"
+    )
+
 
 
 def _adr_readme_fallback() -> str:
@@ -441,6 +492,13 @@ def run_setup(root: Path, include_openspec: bool, force: bool, dry_run: bool) ->
     if include_openspec:
         for rel in OPTIONAL_OPENSPEC_DIRS:
             ensure_dir(root / rel, dry_run=dry_run, ops=ops)
+        ensure_file(
+            root / "openspec/project.md",
+            _openspec_project_fallback(),
+            force=False,
+            dry_run=dry_run,
+            ops=ops,
+        )
 
     # Try generators first.
     skills_root = Path(__file__).resolve().parents[1]
@@ -481,6 +539,13 @@ def run_setup(root: Path, include_openspec: bool, force: bool, dry_run: bool) ->
     ensure_file(
         root / "docs/adr/template.md",
         _adr_template_fallback(),
+        force=False,
+        dry_run=dry_run,
+        ops=ops,
+    )
+    ensure_file(
+        root / "docs/foundations/llm-engineering-principles.md",
+        _llm_engineering_principles_fallback(),
         force=False,
         dry_run=dry_run,
         ops=ops,

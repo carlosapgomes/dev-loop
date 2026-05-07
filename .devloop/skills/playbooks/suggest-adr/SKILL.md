@@ -1243,7 +1243,7 @@ vim docs/adr/ADR-0001-database-choice.md
 
 ```bash
 # 1. Copiar para skills do Pi
-cp -r suggest-adr ~/.pi/skills/
+cp -r suggest-adr ~/.pi/agent/skills/
 
 # 2. Dependências
 pip install pyyaml

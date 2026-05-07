@@ -712,7 +712,7 @@ Após 6 meses: /project-resurrection
 
 ```bash
 # 1. Copiar pasta para skills do Pi
-cp -r project-resurrection ~/.pi/skills/
+cp -r project-resurrection ~/.pi/agent/skills/
 
 # 2. Instalar dependências (se necessário)
 pip install GitPython python-dateutil pyyaml

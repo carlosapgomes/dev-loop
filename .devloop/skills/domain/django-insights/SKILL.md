@@ -848,7 +848,7 @@ if __name__ == "__main__":
 ## Instalação
 
 ```bash
-cp -r django-insights ~/.pi/skills/
+cp -r django-insights ~/.pi/agent/skills/
 pip install Django radon
 ```
 

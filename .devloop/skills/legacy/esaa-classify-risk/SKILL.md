@@ -348,7 +348,7 @@ if __name__ == "__main__":
 
 ## Instalação
 
-1. Copiar esta pasta para `.skills/esaa-classify-risk/`
+1. Copiar esta pasta para `~/.pi/agent/skills/esaa-classify-risk/`
 2. Garantir que Python 3 está disponível
 3. Skill estará disponível como `/esaa-classify-risk`
 
