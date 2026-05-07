@@ -12,7 +12,7 @@ Read first:
 ## Validation Commands
 
 - Smoke skills: `./scripts/smoke-skills.sh --quick`
-- Markdown lint/format: use scripts from `templates/markdown-automation/` when installed in a target project
+- Markdown lint/format: every created/edited `.md` must pass `markdownlint-cli2` before delivery or commit; use scripts from `templates/markdown-automation/` when installed in a target project
 
 ## Operating Rules
 

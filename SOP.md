@@ -97,6 +97,7 @@ Checklist obrigatorio do slice:
 10. salvar o relatorio em markdown temporario e informar o caminho para avaliacao do planner
 
 Formato de saida obrigatorio ao concluir slice:
+
 - Implementador: `REPORT_PATH=<caminho-do-arquivo-temporario.md>`
 - Reviewer/planner: usar `templates/reports/planner-review.md` e decidir aprovado/rejeitado.
 
@@ -124,7 +125,7 @@ Para cada slice vertical:
 
 - testes do escopo alterado
 - lint e type-check do escopo
-- markdown lint quando houver alteração em `.md`
+- `markdownlint-cli2` obrigatório para todo `.md` criado ou editado, incluindo reports, antes de entrega ou commit
 
 ## Setup mínimo de repositório
 

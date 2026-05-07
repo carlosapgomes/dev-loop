@@ -57,6 +57,7 @@ If scope must expand, stop and record justification before coding.
 
 - [ ] RED/GREEN/REFACTOR evidence captured
 - [ ] Validation commands from `AGENTS.md` executed or explicitly justified
+- [ ] Every created/edited Markdown file passed `markdownlint-cli2`
 - [ ] Frozen contracts preserved
 - [ ] Allowed/forbidden file rules respected
 - [ ] `tasks.md` updated
@@ -94,8 +95,8 @@ Implement ONLY this slice.
 Preserve frozen contracts and architectural boundaries.
 Touch only allowed files/areas; do not touch forbidden files/areas.
 Follow the TDD plan: RED -> GREEN -> REFACTOR.
-Run required gates.
-Generate the implementation report and reply with REPORT_PATH=<path-to-report.md>.
+Run required gates, including `markdownlint-cli2` for every created/edited Markdown file.
+Generate the implementation report, lint it with `markdownlint-cli2`, and reply with REPORT_PATH=<path-to-report.md>.
 Do not approve your own work; reviewer/planner gate is separate.
 STOP after this slice.
 ```

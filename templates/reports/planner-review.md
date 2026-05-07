@@ -25,12 +25,11 @@ Choose one:
 - [ ] Required gates executed or justified
 - [ ] Evidence is sufficient to review the diff
 - [ ] `tasks.md` status is correct
+- [ ] Markdown reports were linted with `markdownlint-cli2`
 
 ## 4. Findings
 
-| Severity | Finding | Required action |
-|---|---|---|
-| blocker/follow-up/note | <finding> | <action> |
+- blocker/follow-up/note: <finding> — <action>
 
 ## 5. Follow-up Recommendations
 

@@ -10,9 +10,7 @@ Role: implementation agent. Do not approve your own work.
 
 ## 2. Diff Summary
 
-| File | Change | Reason |
-|---|---|---|
-| `path/to/file` | add/change/remove | <why> |
+- `path/to/file`: add/change/remove — <why>
 
 ## 3. Contract / Scope Compliance
 
@@ -25,12 +23,11 @@ Role: implementation agent. Do not approve your own work.
 
 ## 4. Evidence
 
-| Gate | Command / Evidence | Result |
-|---|---|---|
-| RED | `<test/command>` | pass/fail/not run |
-| GREEN | `<test/command>` | pass/fail/not run |
-| REFACTOR | `<check/summary>` | pass/fail/not run |
-| Validation | `<command>` | pass/fail/not run |
+- RED: `<test/command>` — pass/fail/not run
+- GREEN: `<test/command>` — pass/fail/not run
+- REFACTOR: `<check/summary>` — pass/fail/not run
+- Validation: `<command>` — pass/fail/not run
+- Markdown lint: `npx --yes markdownlint-cli2 <this-report.md>` — pass/fail
 
 ## 5. Reviewer Focus
 

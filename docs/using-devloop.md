@@ -91,6 +91,25 @@ Optional legacy aliases:
 bash "$DEVLOOP_HOME/.devloop/skills/install_all_skills.sh" ~/.pi/agent/skills --include-legacy
 ```
 
+## Markdown Quality Rule
+
+Every Markdown file created or edited by a planner, implementer, or reviewer must pass `markdownlint-cli2` before it is delivered or committed.
+
+This includes:
+
+- proposals/design/tasks
+- slice handoffs
+- implementation reports
+- planner reviews
+- project documentation
+
+Use the installed scripts when available:
+
+```bash
+./scripts/markdown-format.sh
+./scripts/markdown-lint.sh
+```
+
 ## Validate Setup
 
 Inside the target project:

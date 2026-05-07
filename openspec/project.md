@@ -37,6 +37,12 @@ When instructions conflict, use this order:
 - Domain/model layers hold invariants and core decisions.
 - Persistence/integration layers translate external systems into internal contracts.
 
+## Documentation Quality
+
+- Every created or edited Markdown file must pass `markdownlint-cli2` before delivery or commit.
+- Implementation reports and planner reviews are Markdown artifacts and must be linted before handoff.
+- Fix Markdown lint errors; do not leave formatting cleanup to the next agent.
+
 ## Testing Expectations
 
 - Use TDD for slice behavior: RED -> GREEN -> REFACTOR.

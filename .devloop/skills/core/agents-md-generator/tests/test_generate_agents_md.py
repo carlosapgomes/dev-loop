@@ -67,7 +67,7 @@ class GenerateAgentsMdTests(unittest.TestCase):
             self.assertIn("./scripts/markdown-format.sh", content)
             self.assertIn("./scripts/markdown-lint.sh", content)
             self.assertIn("git config core.hooksPath .githooks", content)
-            self.assertIn("Markdown lint sem erros", content)
+            self.assertIn("Todo Markdown criado/editado passou no markdownlint-cli2", content)
 
     def test_check_mode_detects_drift(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

@@ -22,7 +22,7 @@ if [ ${#files[@]} -eq 0 ]; then
 fi
 
 npx --yes prettier --write "${files[@]}"
-npx --yes markdownlint-cli --fix "${files[@]}"
-npx --yes markdownlint-cli "${files[@]}"
+npx --yes markdownlint-cli2 --fix "${files[@]}"
+npx --yes markdownlint-cli2 "${files[@]}"
 
 echo "Markdown formatado e validado com sucesso."

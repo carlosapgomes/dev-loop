@@ -386,7 +386,7 @@ def render_agents_markdown(info: ProjectInfo) -> str:
         "- [ ] Testes relevantes passando",
     ]
     if has_markdown_lint:
-        dod_lines.append("- [ ] Markdown lint sem erros (`./scripts/markdown-lint.sh`)")
+        dod_lines.append("- [ ] Todo Markdown criado/editado passou no markdownlint-cli2 (`./scripts/markdown-lint.sh`)")
     dod_lines.extend(
         [
             "- [ ] Lint/type-check sem erros relevantes",
@@ -442,6 +442,7 @@ def render_agents_markdown(info: ProjectInfo) -> str:
         "- Rodar comandos de validacao da secao 2.",
         "- Atualizar tasks/specs com o status do slice.",
         "- Fazer commit com mensagem rastreavel e dar push para branch remota.",
+        "- Todo Markdown criado/editado deve passar no markdownlint-cli2 antes de entrega ou commit.",
         "- Gerar relatorio conciso e diff-oriented do slice em markdown temporario.",
         "- Informar REPORT_PATH para avaliacao do planner.",
         "- Nao aprovar o proprio trabalho; reviewer/planner gate e separado.",
@@ -465,6 +466,7 @@ def render_agents_markdown(info: ProjectInfo) -> str:
         "If the active change is not a simple QUICK bugfix, require design.md with Contract Freeze before implementation.",
         "Assume the implementer is an LLM with zero context: include inherited contracts, handoff, prompt, success criteria and self-eval gates in the slice file.",
         "Run section 2 validation commands and update artifacts for the completed slice.",
+        "Run markdownlint-cli2 on every Markdown file you create or edit and fix errors before handoff.",
         "Create a concise, diff-oriented implementation report in a temporary markdown file.",
         "Reply with REPORT_PATH=<temp-markdown-path> for separate planner review.",
         "Do not approve your own work.",

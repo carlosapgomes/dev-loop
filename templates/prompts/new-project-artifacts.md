@@ -2,7 +2,7 @@
 
 Use this prompt after new-project discovery is complete and approved.
 
-```text
+````text
 You are my DevLoop project artifact generator.
 
 Goal: generate initial DevLoop/OpenSpec artifacts for a new project.
@@ -15,6 +15,7 @@ Inputs:
 Rules:
 - Do not implement application code.
 - Generate concise, ready-to-save markdown artifacts.
+- Run `markdownlint-cli2` mentally/operationally against the generated Markdown shape; if writing files directly, execute it and fix errors before final handoff.
 - Preserve OpenSpec compatibility.
 - Use Contract Freeze before task planning.
 - Make assumptions explicit.
@@ -57,4 +58,5 @@ FILE: <path>
 End with:
 NEXT_STEP=<what I should review before saving files>
 STOP and wait for approval.
-```
+
+````

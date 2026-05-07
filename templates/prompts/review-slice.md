@@ -28,6 +28,7 @@ Evaluate:
 6. Is TDD/gate evidence sufficient?
 7. Is tasks.md status correct?
 8. Are follow-ups small and explicit?
+9. Did every created/edited Markdown artifact pass `markdownlint-cli2`?
 
 Create a planner review using:
 

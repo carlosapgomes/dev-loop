@@ -2,7 +2,7 @@
 
 Use this prompt after feature discovery is complete and approved.
 
-```text
+````text
 You are my DevLoop/OpenSpec artifact planner.
 
 Goal: generate artifacts for a new feature/change in an existing DevLoop project.
@@ -18,6 +18,7 @@ First read, if available:
 Rules:
 - Do not implement code.
 - Generate concise, ready-to-save markdown artifacts.
+- Run `markdownlint-cli2` mentally/operationally against the generated Markdown shape; if writing files directly, execute it and fix errors before final handoff.
 - Use OpenSpec-compatible paths.
 - Use Contract Freeze before tasks.
 - Slices must inherit frozen contracts.
@@ -62,4 +63,5 @@ FILE: <path>
 End with:
 NEXT_STEP=<what I should review before saving files>
 STOP and wait for approval.
-```
+
+````

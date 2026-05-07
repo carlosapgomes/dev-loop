@@ -26,6 +26,7 @@ Rules:
 - Respect explicit non-goals.
 - Follow TDD plan: RED -> GREEN -> REFACTOR.
 - Run required gates from AGENTS.md or justify why not run.
+- Run `markdownlint-cli2` on every Markdown file you create or edit, including the implementation report, and fix errors before handoff.
 - Update tasks/artifacts only as required by the slice.
 - Do not approve your own work.
 - Stop after this slice.

@@ -21,6 +21,6 @@ if [ ${#files[@]} -eq 0 ]; then
   exit 0
 fi
 
-npx --yes markdownlint-cli "${files[@]}"
+npx --yes markdownlint-cli2 "${files[@]}"
 
 echo "Markdown lint OK."

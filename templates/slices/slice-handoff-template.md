@@ -59,6 +59,7 @@ Se precisar expandir escopo, parar e justificar antes de codar.
 
 - [ ] Evidencia RED/GREEN/REFACTOR capturada
 - [ ] Comandos de validacao do `AGENTS.md` executados ou justificados
+- [ ] Todo Markdown criado/editado passou no `markdownlint-cli2`
 - [ ] Contratos congelados preservados
 - [ ] Arquivos permitidos/proibidos respeitados
 - [ ] `tasks.md` atualizado
@@ -96,8 +97,8 @@ Implemente APENAS esta slice.
 Preserve contratos congelados e fronteiras arquiteturais.
 Toque apenas arquivos/areas permitidos; nao toque arquivos/areas proibidos.
 Siga o plano TDD: RED -> GREEN -> REFACTOR.
-Execute os gates obrigatorios.
-Gere o relatorio de implementacao e responda com REPORT_PATH=<caminho-do-relatorio.md>.
+Execute os gates obrigatorios, incluindo `markdownlint-cli2` para todo Markdown criado/editado.
+Gere o relatorio de implementacao, passe `markdownlint-cli2` nele e responda com REPORT_PATH=<caminho-do-relatorio.md>.
 Nao aprove o proprio trabalho; o reviewer/planner gate e separado.
 PARE apos esta slice.
 ```

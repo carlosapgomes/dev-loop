@@ -4,8 +4,8 @@ Modelos prontos para padronizar lint/fix de Markdown no workflow.
 
 ## Arquivos
 
-- `markdown-format.sh`: roda prettier + markdownlint --fix + markdownlint
-- `markdown-lint.sh`: valida markdown
+- `markdown-format.sh`: roda prettier + `markdownlint-cli2 --fix` + `markdownlint-cli2`
+- `markdown-lint.sh`: valida markdown com `markdownlint-cli2`
 - `pre-commit`: auto-fix/lint de arquivos `.md` staged
 - `.markdownlintignore`: ignora `.pi/`, `.codex/`, `node_modules/`, `.git/`
 - `install.sh`: instala tudo no projeto e configura `core.hooksPath`
@@ -36,3 +36,7 @@ git config core.hooksPath .githooks
 ./scripts/markdown-format.sh
 ./scripts/markdown-lint.sh
 ```
+
+## Regra dura
+
+Todo Markdown criado ou editado deve passar por `markdownlint-cli2` e ter os erros corrigidos antes de ser considerado definitivo, entregue em report ou commitado.

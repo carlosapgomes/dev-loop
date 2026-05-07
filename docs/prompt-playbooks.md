@@ -52,15 +52,13 @@ The router chooses the right prompt/playbook.
 
 ## Prompt Index
 
-| Prompt | Use When | Output |
-|---|---|---|
-| `devloop-planner-router.md` | You are unsure where to start | Recommended mode and next prompt |
-| `new-project-discovery.md` | Starting a project idea | Planning summary, risks, open questions |
-| `new-project-artifacts.md` | Discovery is approved | Initial DevLoop/OpenSpec files |
-| `new-feature-discovery.md` | Planning a feature/change | Feature summary, risk, change id |
-| `new-feature-artifacts.md` | Feature discovery is approved | OpenSpec change + first slice |
-| `execute-slice.md` | A slice handoff exists | Implementation + `REPORT_PATH` |
-| `review-slice.md` | Implementation report exists | Approval/rejection + review report |
+- `devloop-planner-router.md`: use when unsure where to start; outputs recommended mode and next prompt.
+- `new-project-discovery.md`: use for a project idea; outputs planning summary, risks, and open questions.
+- `new-project-artifacts.md`: use after discovery approval; outputs initial DevLoop/OpenSpec files.
+- `new-feature-discovery.md`: use for a feature/change; outputs feature summary, risk, and change id.
+- `new-feature-artifacts.md`: use after feature discovery approval; outputs OpenSpec change and first slice.
+- `execute-slice.md`: use when a slice handoff exists; outputs implementation and `REPORT_PATH`.
+- `review-slice.md`: use when implementation report exists; outputs approval/rejection and review report.
 
 ## Important Rules
 
@@ -70,6 +68,7 @@ The router chooses the right prompt/playbook.
 - Reviewer prompts do not implement code.
 - Slices must inherit `design.md#contract-freeze`.
 - Keep prompts and outputs concise.
+- Every Markdown artifact created or edited by planner, implementer, or reviewer must pass `markdownlint-cli2` before delivery or commit.
 
 ## Example: New Feature
 
